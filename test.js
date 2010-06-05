@@ -11,7 +11,6 @@ var probe_one	= function(app_suffix, completed_cb){
 	})
 }
 
-var app_suffix	= "oload";
 probe_one("oload", function(){
 	probe_one('casto', function(){		
 		probe_one('casti');

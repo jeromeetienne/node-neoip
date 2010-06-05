@@ -1,5 +1,5 @@
 nodejs bindings for neoip
 
-early work. 
+early work. To test it
 
-node test.js to test it.
+  node test.js
