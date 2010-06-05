@@ -22,8 +22,8 @@ var probe = function(apps_suffix, host, port, method_name, success_cb, failure_c
 	//if(failure_cb)	client.addListener("timeout"	, failure_cb);
 	var request	= client.request('GET', path, {'host': host});
 	request.addListener('response', function(response){
-		sys.puts('STATUS: ' + response.statusCode);
-		sys.puts('HEADERS: ' + JSON.stringify(response.headers));
+		//sys.puts('STATUS: ' + response.statusCode);
+		//sys.puts('HEADERS: ' + JSON.stringify(response.headers));
 		// Handle faillure at http level
 		if(response.statusCode != 200){
 			if(failure_cb)	failure_cb(new Error("http statuscode="+response.statuscode));
@@ -31,7 +31,7 @@ var probe = function(apps_suffix, host, port, method_name, success_cb, failure_c
 		}
 		response.setEncoding('utf8');
 		response.addListener('data', function( reply_json ){
-			sys.puts('BODY: ' + reply_json);
+			//sys.puts('BODY: ' + reply_json);
 			// TODO: make this jsrest.js able to answer jsonp.
 			// - if obj_id=present, then use it to define the variable
 			// - if callback=present, then use it to support jsonp
@@ -42,7 +42,7 @@ var probe = function(apps_suffix, host, port, method_name, success_cb, failure_c
 			// get data from the chunk
 			//var reply_json	= chunk.match(/=(.*);/)[1];
 			var reply_data	= JSON.parse(reply_json);
-			sys.puts('bla='+sys.inspect(reply_data));
+			//sys.puts('bla='+sys.inspect(reply_data));
 			var returned_val= reply_data['returned_val'];
 			success_cb(returned_val);
 		});
@@ -83,12 +83,12 @@ exports.discover_app	= function(app_suffix, success_cb, failure_cb){
 	var port_cur	= port_beg;
 	// define the callbacks
 	var probe_succ_cb	= function(version){
-		sys.puts("found version "+version+" port_cur="+port_cur);
+		//sys.puts("found version "+version+" port_cur="+port_cur);
 		var root_url	= "http://127.0.0.1:"+port_cur;
 		success_cb(root_url, version);		
 	};
 	var probe_fail_cb	= function(had_error){
-		sys.puts('not found port_cur='+port_cur);
+		//sys.puts('not found port_cur='+port_cur);
 		if(port_cur == port_end){
 			// report "not found" when all port has been tested
 			if( failure_cb )	failure_cb("not found");
