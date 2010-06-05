@@ -10,19 +10,9 @@ var probe = function(apps_suffix, host, port, method_name, success_cb, failure_c
 	if(!success_cb)	success_cb = function(){};
 	if(!failure_cb)	failure_cb = function(){};
 	// bind error cases at the socket level
-	// - REPORT: to report bug, "error" is reported twice
-	// - REPORT: "error" is not in the doc
-	// - REPORT: is there a parameter to this callback, it doesnt seems to be
-	// KLUDGE: workaround because node.js report twice the error
-	{
-		var cb_reported	= false;
-		client.addListener("error"	, function(had_error){
-			if( !cb_reported )	failure_cb(had_error);
-			cb_reported	= true;
-		});
-	}
-	//if(failure_cb)	client.addListener("error"	, failure_cb);
-	//if(failure_cb)	client.addListener("timeout"	, failure_cb);
+	client.addListener("error"	, failure_cb);
+	client.addListener("timeout"	, failure_cb);
+	// create the request
 	var request	= client.request('GET', path, {'host': host});
 	request.addListener('response', function(response){
 		//sys.puts('STATUS: ' + response.statusCode);
