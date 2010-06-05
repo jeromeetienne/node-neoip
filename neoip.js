@@ -73,29 +73,31 @@ var app_infos	= {
  * @param {String} app_suffix the neoip application suffix
  * @param {function} callback called to notify the result to the caller callback(version, strerror)
 */
-exports.discover_app	= function(app_suffix, callback){
+exports.discover_app	= function(app_suffix, success_cb, failure_cb){
 	// sanity check
-	assert.ok(callback);
+	assert.ok(success_cb);
 	assert.ok(app_suffix == "oload" || app_suffix == "casti" || app_suffix == "casto");
 	// get info from app_infos
 	var port_beg	= app_infos[app_suffix]["port_beg"];
 	var port_end	= app_infos[app_suffix]["port_end"];
 	var port_cur	= port_beg;
 	// define the callbacks
-	var success_cb	= function(version){
-		callback(version, null);		
+	var probe_succ_cb	= function(version){
+		sys.puts("found version "+version+" port_cur="+port_cur);
+		var root_url	= "http://127.0.0.1:"+port_cur;
+		success_cb(root_url, version);		
 	};
-	var failure_cb	= function(had_error){
-		sys.puts('port_cur='+port_cur);
+	var probe_fail_cb	= function(had_error){
+		sys.puts('not found port_cur='+port_cur);
 		if(port_cur == port_end){
 			// report "not found" when all port has been tested
-			callback(null, "not found");
+			if( failure_cb )	failure_cb("not found");
 		}else{
 			// test the next port
 			port_cur++;
-			probe(app_suffix, "127.0.0.1", port_cur, "probe_apps", success_cb, failure_cb);
+			probe(app_suffix, "127.0.0.1", port_cur, "probe_apps", probe_succ_cb, probe_fail_cb);
 		}
 	};
 	// start the probbing
-	probe(app_suffix, "127.0.0.1", port_cur, "probe_apps", success_cb, failure_cb);
+	probe(app_suffix, "127.0.0.1", port_cur, "probe_apps", probe_succ_cb, probe_fail_cb);
 }
