@@ -35,17 +35,9 @@ var probe = function(apps_suffix, host, port, method_name, success_cb, failure_c
 		response.setEncoding('utf8');
 		response.addListener('data', function( reply_json ){
 			//sys.puts('BODY: ' + reply_json);
-			// TODO: make this jsrest.js able to answer jsonp.
-			// - if obj_id=present, then use it to define the variable
-			// - if callback=present, then use it to support jsonp
-			// - if none is present, just reply the json
-			// TODO: fix json. the keys of the object MUST have double-quotes
-			//chunk	= 'neoip_xdomrpc_script_reply_var_123 = {"fault": null, "returned_val": "0.0.1"};';
 			// REPORT: JSON.parse(' {};'); hangs in node-console
 			// get data from the chunk
-			//var reply_json	= chunk.match(/=(.*);/)[1];
 			var reply_data	= JSON.parse(reply_json);
-			//sys.puts('bla='+sys.inspect(reply_data));
 			var returned_val= reply_data['returned_val'];
 			success_cb(returned_val);
 		});
