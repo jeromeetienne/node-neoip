@@ -6,16 +6,19 @@ var assert	= require('assert');
 var probe = function(apps_suffix, host, port, method_name, success_cb, failure_cb){
 	var path	= "/neoip_"+apps_suffix+"_appdetect_jsrest.js?method_name="+method_name;
 	var client	= http.createClient(port, host);
+	// if callback are not specified, use a dummy one
+	if(!success_cb)	success_cb = function(){};
+	if(!failure_cb)	failure_cb = function(){};
 	// bind error cases at the socket level
 	// - REPORT: to report bug, "error" is reported twice
 	// - REPORT: "error" is not in the doc
 	// - REPORT: is there a parameter to this callback, it doesnt seems to be
-	if(failure_cb){
-		// KLUDGE: workaround because node.js report twice the error
-		var reported	= false;
+	// KLUDGE: workaround because node.js report twice the error
+	{
+		var cb_reported	= false;
 		client.addListener("error"	, function(had_error){
-			if( !reported )	failure_cb(had_error)
-			reported	= true;
+			if( !cb_reported )	failure_cb(had_error);
+			cb_reported	= true;
 		});
 	}
 	//if(failure_cb)	client.addListener("error"	, failure_cb);
@@ -26,7 +29,7 @@ var probe = function(apps_suffix, host, port, method_name, success_cb, failure_c
 		//sys.puts('HEADERS: ' + JSON.stringify(response.headers));
 		// Handle faillure at http level
 		if(response.statusCode != 200){
-			if(failure_cb)	failure_cb(new Error("http statuscode="+response.statuscode));
+			failure_cb(new Error("http statuscode="+response.statuscode));
 			return
 		}
 		response.setEncoding('utf8');
@@ -77,6 +80,8 @@ exports.discover_app	= function(app_suffix, success_cb, failure_cb){
 	// sanity check
 	assert.ok(success_cb);
 	assert.ok(app_suffix == "oload" || app_suffix == "casti" || app_suffix == "casto");
+	// if callback are not specified, use a dummy one
+	if(!failure_cb)	failure_cb = function(){};
 	// get info from app_infos
 	var port_beg	= app_infos[app_suffix]["port_beg"];
 	var port_end	= app_infos[app_suffix]["port_end"];
@@ -91,7 +96,7 @@ exports.discover_app	= function(app_suffix, success_cb, failure_cb){
 		//sys.puts('not found port_cur='+port_cur);
 		if(port_cur == port_end){
 			// report "not found" when all port has been tested
-			if( failure_cb )	failure_cb("not found");
+			failure_cb("not found");
 		}else{
 			// test the next port
 			port_cur++;
