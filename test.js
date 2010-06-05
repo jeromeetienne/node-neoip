@@ -1,13 +1,19 @@
 var neoip	= require('./neoip');
 var sys		= require('sys');
 
-var disc	= function(app_suffix, callback){
-	return 
+var probe_one	= function(app_suffix, completed_cb){
+	neoip.discover_app(app_suffix, function(root_url, version){
+		sys.puts(app_suffix+"-"+version+" found at "+root_url);
+		if( completed_cb )	completed_cb();
+	}, function(reason){
+		sys.puts(app_suffix+" not found");
+		if( completed_cb )	completed_cb();
+	})
 }
 
 var app_suffix	= "oload";
-neoip.discover_app(app_suffix, function(root_url, version){
-	sys.puts(app_suffix+"-"+version+" found at "+root_url);
-}, function(reason){
-	sys.puts(app_suffix+" not found");
-});
+probe_one("oload", function(){
+	probe_one('casto', function(){		
+		probe_one('casti');
+	});
+})
