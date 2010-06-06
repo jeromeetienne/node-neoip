@@ -32,6 +32,6 @@ if( false ){
 if(true){
 	neoip.discover_webpack(function(status){
 		sys.puts("status="+status);
-		sys.log(sys.inspect(neoip.disc_app_cache));
+		//sys.log(sys.inspect(neoip.disc_app_cache));
 	})
 }

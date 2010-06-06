@@ -2,7 +2,9 @@ var sys		= require('sys');
 var http	= require('http');
 var assert	= require('assert');
 
-
+/**
+ * Probe an application 
+*/
 var probe_app = function(apps_suffix, host, port, method_name, success_cb, failure_cb){
 	var path	= "/neoip_"+apps_suffix+"_appdetect_jsrest.js?method_name="+method_name;
 	var client	= http.createClient(port, host);
@@ -53,14 +55,17 @@ var app_infos	= {
 	}
 };
 
+
 var disc_app_cache	= {};
 var disc_app_cache_contain	= function(app_suffix){ return app_suffix in disc_app_cache_contain;	}
 exports.disc_app_cache	= disc_app_cache;
 
 /**
- *
+ * Discover an neoip application
+ * 
  * @param {String} app_suffix the neoip application suffix
- * @param {function} callback called to notify the result to the caller callback(version, strerror)
+ * @param {function} success_cb notified if app is found success_cb(root_url, version)
+ * @param {function} failure_cb notified if app is not found failure_cb(reason)
 */
 var discover_app	= function(app_suffix, success_cb, failure_cb){
 	// sanity check
@@ -119,6 +124,10 @@ exports.discover_app	= discover_app;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Compare version ala memcmp
+ * - used in discover_webpack()
+*/
 var version_compare	= function(version1, version2){
 	// parse the versions
 	var matches1	= version1.match(/(\d+).(\d+).(\d+)/);
@@ -143,6 +152,8 @@ var version_compare	= function(version1, version2){
 }
 
 /**
+ * Discover webpack on localhost and notify the result
+ * 
  * @param callback {Function} callback notified "toinstall", "toupgrade", "installed"
 */
 var discover_webpack	= function(callback){
