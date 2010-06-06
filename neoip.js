@@ -3,7 +3,7 @@ var http	= require('http');
 var assert	= require('assert');
 
 
-var probe = function(apps_suffix, host, port, method_name, success_cb, failure_cb){
+var probe_app = function(apps_suffix, host, port, method_name, success_cb, failure_cb){
 	var path	= "/neoip_"+apps_suffix+"_appdetect_jsrest.js?method_name="+method_name;
 	var client	= http.createClient(port, host);
 	// if callback are not specified, use a dummy one
@@ -53,17 +53,30 @@ var app_infos	= {
 	}
 };
 
+var disc_app_cache	= {};
+exports.disc_app_cache	= disc_app_cache;
+
 /**
  *
  * @param {String} app_suffix the neoip application suffix
  * @param {function} callback called to notify the result to the caller callback(version, strerror)
 */
-exports.discover_app	= function(app_suffix, success_cb, failure_cb){
+var discover_app	= function(app_suffix, success_cb, failure_cb){
 	// sanity check
 	assert.ok(success_cb);
 	assert.ok(app_suffix == "oload" || app_suffix == "casti" || app_suffix == "casto");
 	// if callback are not specified, use a dummy one
 	if(!failure_cb)	failure_cb = function(){};
+	// handle cache
+	if(app_suffix in disc_app_cache){
+		var cache_item	= disc_app_cache[app_suffix];
+		if( cache_item.version === false ){
+			setTimeout(function(){failure_cb(true);}, 0);
+		}else{
+			setTimeout(function(){success_cb(cache_item.root_url, cache_item.version)}, 0);			
+		}
+		return;
+	}
 	// get info from app_infos
 	var port_beg	= app_infos[app_suffix]["port_beg"];
 	var port_end	= app_infos[app_suffix]["port_end"];
@@ -72,19 +85,29 @@ exports.discover_app	= function(app_suffix, success_cb, failure_cb){
 	var probe_succ_cb	= function(version){
 		//sys.puts("found version "+version+" port_cur="+port_cur);
 		var root_url	= "http://127.0.0.1:"+port_cur;
+		// cache the result
+		disc_app_cache[app_suffix]	= {
+			"root_url"	: root_url,
+			"version"	: version
+		};
+		// notify the caller
 		success_cb(root_url, version);		
 	};
 	var probe_fail_cb	= function(had_error){
 		//sys.puts('not found port_cur='+port_cur);
 		if(port_cur == port_end){
+			// cache the result
+			disc_app_cache[app_suffix]	= { "version"	: false	};
 			// report "not found" when all port has been tested
 			failure_cb("not found");
 		}else{
 			// test the next port
 			port_cur++;
-			probe(app_suffix, "127.0.0.1", port_cur, "probe_apps", probe_succ_cb, probe_fail_cb);
+			probe_app(app_suffix, "127.0.0.1", port_cur, "probe_apps", probe_succ_cb, probe_fail_cb);
 		}
 	};
 	// start the probbing
-	probe(app_suffix, "127.0.0.1", port_cur, "probe_apps", probe_succ_cb, probe_fail_cb);
+	probe_app(app_suffix, "127.0.0.1", port_cur, "probe_apps", probe_succ_cb, probe_fail_cb);
 }
+
+exports.discover_app	= discover_app;

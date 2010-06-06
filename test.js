@@ -13,8 +13,19 @@ var probe_one	= function(app_suffix, completed_cb){
 	})
 }
 
+if(false){
+	probe_one("oload", function(){
+		probe_one('casto', function(){		
+			probe_one('casti', function(){
+				sys.log(sys.inspect(neoip.disc_app_cache));
+			})
+		});
+	})
+}
+
 probe_one("oload", function(){
-	probe_one('casto', function(){		
-		probe_one('casti');
+	probe_one('oload', function(){		
+		sys.log(sys.inspect(neoip.disc_app_cache));
 	});
 })
+
