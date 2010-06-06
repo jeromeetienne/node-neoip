@@ -54,6 +54,7 @@ var app_infos	= {
 };
 
 var disc_app_cache	= {};
+var disc_app_cache_contain	= function(app_suffix){ return app_suffix in disc_app_cache_contain;	}
 exports.disc_app_cache	= disc_app_cache;
 
 /**
@@ -111,3 +112,31 @@ var discover_app	= function(app_suffix, success_cb, failure_cb){
 }
 
 exports.discover_app	= discover_app;
+
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+//	Webpack
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+var discover_webpack	= function(callback){
+	// defined the minimal version for each apps
+	var version_min	= {
+		"oload"	: "0.0.1",
+		"casto"	: "0.0.1",
+		"casti"	: "0.0.1"
+	};
+	var completed_cb	= function(){
+		// test if all the apps got probed
+		if( !("oload" in disc_app_cache) )	return;	
+		if( !("casto" in disc_app_cache) )	return;	
+		if( !("casti" in disc_app_cache) )	return;
+		// notify the caller
+		callback("slota");
+	}
+	// launch the discovery of each app
+	for(var app_suffix in version_min){
+		discover_app(app_suffix, completed_cb, completed_cb);		
+	}
+}
+exports.discover_webpack	= discover_webpack;

@@ -22,10 +22,16 @@ if(false){
 		});
 	})
 }
-
-probe_one("oload", function(){
-	probe_one('oload', function(){		
+if( false ){
+	probe_one("oload", function(){
+		probe_one('oload', function(){		
+			sys.log(sys.inspect(neoip.disc_app_cache));
+		});
+	})
+}
+if(true){
+	neoip.discover_webpack(function(status){
+		sys.puts("status="+status);
 		sys.log(sys.inspect(neoip.disc_app_cache));
-	});
-})
-
+	})
+}
