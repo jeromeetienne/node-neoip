@@ -119,23 +119,67 @@ exports.discover_app	= discover_app;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
+var version_compare	= function(version1, version2){
+	// parse the versions
+	var matches1	= version1.match(/(\d+).(\d+).(\d+)/);
+	var matches2	= version2.match(/(\d+).(\d+).(\d+)/);
+	// compare the major
+	var major1	= parseInt(matches1[1], 10);
+	var major2	= parseInt(matches2[1], 10);
+	if( major1 > major2 )	return +1;
+	if( major1 < major2 )	return -1;
+	// compare the minor
+	var minor1	= parseInt(matches1[2], 10);
+	var minor2	= parseInt(matches2[2], 10);
+	if( minor1 > minor2 )	return +1;
+	if( minor1 < minor2 )	return -1;
+	// compare the patch
+	var patch1	= parseInt(matches1[3], 10);
+	var patch2	= parseInt(matches2[3], 10);
+	if( patch1 > patch2 )	return +1;
+	if( patch1 < patch2 )	return -1;
+	// return 0, they are considered equal
+	return 0;
+}
+
+
+/**
+ * @param callback {Function} callback notified "toinstall", "toupgrade", "installed"
+*/
 var discover_webpack	= function(callback){
 	// defined the minimal version for each apps
-	var version_min	= {
+	var versions_min	= {
 		"oload"	: "0.0.1",
 		"casto"	: "0.0.1",
 		"casti"	: "0.0.1"
 	};
 	var completed_cb	= function(){
 		// test if all the apps got probed
-		if( !("oload" in disc_app_cache) )	return;	
-		if( !("casto" in disc_app_cache) )	return;	
-		if( !("casti" in disc_app_cache) )	return;
+		for(var app_suffix in versions_min){
+			if( !(app_suffix in disc_app_cache) )	return;	
+		}
+		// test if all the apps got probed
+		for(var app_suffix in versions_min){
+			var version	= disc_app_cache[app_suffix].version;
+			if( version === false ){
+				callback("toinstall");
+				return;
+			}
+		}
+		// test if all the apps got probed
+		for(var app_suffix in versions_min){
+			var version_cur	= disc_app_cache[app_suffix].version;
+			var version_min	= versions_min[app_suffix];
+			if( version_compare(version_cur, version_min) < 0 ){
+				callback("toupgrade");
+				return;
+			}
+		}
 		// notify the caller
-		callback("slota");
+		callback("installed");
 	}
 	// launch the discovery of each app
-	for(var app_suffix in version_min){
+	for(var app_suffix in versions_min){
 		discover_app(app_suffix, completed_cb, completed_cb);		
 	}
 }
