@@ -142,7 +142,6 @@ var version_compare	= function(version1, version2){
 	return 0;
 }
 
-
 /**
  * @param callback {Function} callback notified "toinstall", "toupgrade", "installed"
 */
@@ -151,7 +150,7 @@ var discover_webpack	= function(callback){
 	var versions_min	= {
 		"oload"	: "0.0.1",
 		"casto"	: "0.0.1",
-		"casti"	: "0.0.1"
+		"casti"	: "0.0.2"
 	};
 	var completed_cb	= function(){
 		// test if all the apps got probed
