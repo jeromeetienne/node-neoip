@@ -1,5 +1,18 @@
 var neoip	= require('./neoip');
 var sys		= require('sys');
+var base64	= require('./base64').base64;
+
+
+if(true){
+	var origin	= "slota";
+	var encoded	= base64.encode_safe(origin);
+	var decoded	= base64.decode_safe(encoded);
+	console.log("origin="+origin);
+	console.log("encoded="+encoded);
+	console.log("decoded="+decoded);
+	
+}
+
 
 var probe_one	= function(app_suffix, completed_cb){
 	// if completed_cb is not specified, use a dummy one
@@ -29,7 +42,7 @@ if( false ){
 		});
 	})
 }
-if(true){
+if(false){
 	neoip.discover_webpack(function(status){
 		sys.puts("status="+status);
 		//sys.log(sys.inspect(neoip.disc_app_cache));
