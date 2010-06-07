@@ -3,5 +3,11 @@
 	"name" 		: "neoip",
 	"version"	: "0.0.1",
 	"description"	: "Neoip binding for NodeJS",
-	"main"		: "neoip/neoip"
+	"main"		: "./neoip/neoip",
+	"directories"	: {
+		"lib"		: "./neoip"
+	},
+	"bin"		: {
+		"neoip-url"	: "./neoip-url"
+	}
 }
