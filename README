@@ -3,3 +3,7 @@ nodejs bindings for neoip
 early work. To test it
 
   node test.js
+  
+to install it with npm
+
+  npm install neoip@latest
