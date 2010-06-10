@@ -5013,9 +5013,11 @@ jQuery.extend({
 
 			// Handle JSONP-style loading
 			window[ jsonp ] = window[ jsonp ] || function( tmp ) {
+console.log("completed in jquery");				
 				data = tmp;
 				success();
 				complete();
+return;
 				// Garbage collect
 				window[ jsonp ] = undefined;
 
@@ -5070,7 +5072,6 @@ jQuery.extend({
 			// Handle Script loading
 			if ( !jsonp ) {
 				var done = false;
-
 				// Attach handlers for all browsers
 				script.onload = script.onreadystatechange = function() {
 					if ( !done && (!this.readyState ||
@@ -5087,7 +5088,12 @@ jQuery.extend({
 					}
 				};
 			}
-
+			
+			
+script.onerror	= function(){
+	alert("error");
+}
+console.log("just before insertBefore in jquery");
 			// Use insertBefore instead of appendChild  to circumvent an IE6 bug.
 			// This arises when a base node is used (#2709 and #4378).
 			head.insertBefore( script, head.firstChild );
