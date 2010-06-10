@@ -47,16 +47,16 @@ var disp_usage	= function(){
 	sys.puts('neoip-url http://example.com/mystaticfile');
 	sys.puts("\tDisplay the url for mystaticfile. Which gonna go thru neoip-webpack");
 	sys.puts('\tif it is present.')
-	sys.puts('mplayer `neoip-url http://example.com/myvideofile`');
+	sys.puts('mplayer `neoip-url http://example.com/video.mp4`');
 	sys.puts("\tWill generate the neoip url for this file and mplayer will directly");
 	sys.puts("\tread the video from neoip-webpack. This means you can read a video");
 	sys.puts("\tdirectly from a torrent!");
 }
 
 
-var nested_uri	= new nested_uri_t();
 
 // build the nested_uri depending on the cmdline argv
+var nested_uri	= new nested_uri_t();
 for(var arg_idx = 2; arg_idx < process.argv.length; ){
 	var arg	= process.argv[arg_idx];
 	if( arg == "--outter_var" || arg == "-o" ){
@@ -99,13 +99,14 @@ for(var arg_idx = 2; arg_idx < process.argv.length; ){
 }
 
 
-
+// discover neoip-oload and act depending on its presence or not
 neoip.discover_app("oload", function(root_url, version){
 	// if oload is present, output nested_uri 
 	nested_uri.set('outter_uri', root_url);
 	sys.puts(nested_uri.to_string());
 }, function(reason){
 	// if oload is not present, output plain inner_uri
+	var inner_uri	= nested_uri.get('inner_uri');
 	sys.puts(inner_uri)
 })
 
