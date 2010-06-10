@@ -17,7 +17,7 @@ var nested_uri_t	= function(nested_uri_str){
 					_col.set(key, val);
 					break;
 				}
-			}	
+			}
 	
 	////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +73,20 @@ var nested_uri_t	= function(nested_uri_str){
 		var result	= "";
 		// sanity check - the object MUST be sane
 		console.assert( is_sane() );
-	
+// neoip-url inner_uri
+// outter_uri = discovered
+// inner_uri  = from cmdline
+// --outter_var/-o	key=val
+// --minner_var/-i	key=val
+//------------------
+// --mode/-m		alias for outter_var/mod
+// --dupuri/-d  	alias for outter_var/dupuri
+// --path/-p		alias for outter_var/subfile_path
+// --type/-t		alias for outter_var/link_type
+
+// {{outter_uri}}/{{mod}}/(*{{outter_var_key}}*{{outter_var_val}}/)*
+// /{{inner_uri}}(?@)neoip_metavar_{{minner_var_key}}=#{{minner_var_val}}
+
 		// start building the nested_uri
 		result	+= _col.get('outter_uri') + "/";
 		
@@ -101,7 +114,7 @@ var nested_uri_t	= function(nested_uri_str){
 		// handle outter_var/subfile_path, aka insert the dynamic outter_var subfile_level
 		if( _col.has('outter_var/subfile_path') ){
 			var subfile_path	= _col.get('outter_var/subfile_path');
-			var subfile_level	= subfile_path.split("/").length - 1;		// put the key of the variable
+			var subfile_level	= subfile_path.split("/").length - 1;	// put the key of the variable
 			// add the subfile_level as outter_var in result
 			result	+= "*subfile_level*"+subfile_level+'/';
 		}

@@ -8,7 +8,7 @@ var assert_mod	= require('assert');
  * - var console	= require('firebug').console;
 */
 var console	= (function(){
-	var log		= function(msg)		{ sys.puts(msg) }
+	var log		= function(msg)		{ sys.puts(msg) 			}
 	var dir		= function(variable)	{ sys.puts(sys.inspect(variable))	}
 	var assert	= function(cond)	{ assert_mod.ok(cond);			}
 	return {
