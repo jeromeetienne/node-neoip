@@ -14,11 +14,11 @@ var ez_fileutils= require('./ez_fileutils');
 */
 var cpu_digest_http	= function(url_str, range_beg, range_len, completed_cb){
 	var url		= url_module.parse(url_str);
-	range_end	= range_beg+range_len-1;
+	var range_end	= range_beg+range_len-1;
 	var hash	= crypto.createHash('md5');
 
 	// rebuild the path_query_hash string to put in the request path
-	pqh_str	 = url.pathname;
+	var pqh_str	 = url.pathname;
 	if( url.query !== undefined )	pqh_str	+= "?"+url.query;
 	if( url.hash  !== undefined )	pqh_str	+= url.hash;
 	// create the http client
@@ -29,7 +29,7 @@ var cpu_digest_http	= function(url_str, range_beg, range_len, completed_cb){
 	});
 	request.addListener('response', function(response) {
 		response.setEncoding('binary');
-		response.addListener('data', function (chunk) {
+		response.addListener('data', function(chunk){
 			//ez_output.hexa_dump(chunk);
 			hash.update(chunk);
 		});
@@ -48,7 +48,7 @@ var cpu_digest_http	= function(url_str, range_beg, range_len, completed_cb){
 var cpu_digest_file	= function(filename, range_beg, range_len, completed_cb){
 	var hash	= crypto.createHash('md5');
 	var read_len	= 0;
-	var chunk_max	= 500*1024;
+	var chunk_max	= 512*1024;
 	
 	var callback	= function(err, data){
 		if( err !== null ){
@@ -76,20 +76,25 @@ var cpu_digest_file	= function(filename, range_beg, range_len, completed_cb){
 */
 var cmp_digest	= function(url, filename, range_beg, range_len, completed_cb){
 	cpu_digest_http(url, range_beg, range_len, function(err, digest_http){
-		//sys.puts("url="+url+" hex="+digest_http);
-		cpu_digest_file(filename, range_beg, range_len, function(err, digest_file){
-			//sys.puts("filename="+filename+" hex="+digest_file);
-			var succeed	= digest_http == digest_file;
-			completed_cb(null, succeed);
-		})
+		sys.puts("url="+url+" hex="+digest_http);
+		completed_cb(null, true);
+		if(false){
+			//sys.puts("url="+url+" hex="+digest_http);
+			cpu_digest_file(filename, range_beg, range_len, function(err, digest_file){
+				//sys.puts("filename="+filename+" hex="+digest_file);
+				var succeed	= digest_http == digest_file;
+				completed_cb(null, succeed);
+			})
+		}
 	})	
 }
 
 var url		= "http://localhost/~jerome/Videos/Fearless.avi";
+var url		= "http://localhost:4550/http://localhost/~jerome/Videos/Fearless.avi";
 var filename	= '/home/jerome/Videos/Fearless.avi';
 
-var range_len_base	= 5;
-var range_len_rand	= 0;
+var range_len_base	= 3*1024*1024;
+var range_len_rand	= 512*1024;
 var nb_concurent	= 1;
 
 var filesize	= fs.statSync(filename).size
