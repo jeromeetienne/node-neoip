@@ -8,6 +8,7 @@ $ pod2man myfile.pod | man -l -
 =head1 NAME
 
 neoip-oload-stress-tester - stress test neoip-oload
+
 =head1 SYNOPSIS
 
 B<neoip-oload-stress-tester> [ I<options> ... ]
