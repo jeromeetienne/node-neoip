@@ -1,0 +1,38 @@
+=begin hide
+
+To debug this .pod file
+$ pod2man myfile.pod | man -l -
+
+=end hide
+
+=head1 NAME
+
+neoip-oload-stress-tester - stress test neoip-oload
+=head1 SYNOPSIS
+
+B<neoip-oload-stress-tester> [ I<options> ... ]
+
+=head1 DESCRIPTION
+
+Perform stress test of neoip-oload.
+
+It is able to test a daemon which is not local, which is a good feature to
+test cross-plateform.
+
+=over
+
+=item cpu/memory perform
+
+It is able to launch multiple clients on I<neoip-oload> and so will
+stress the performance too.
+
+=item crash detection
+
+It performs random access in size/time/nb concurrent. So it may
+detect bugs which are not in the deterministic tests.
+
+=back
+
+=head1 SEE ALSO
+
+neoip-oload(1), neoip-webpack(1)
