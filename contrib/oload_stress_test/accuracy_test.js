@@ -74,7 +74,7 @@ var cpu_digest_file	= function(filename, range_beg, range_len, completed_cb){
 */
 var cmp_digest	= function(url, filename, range_beg, range_len, completed_cb){
 	cpu_digest_http(url, range_beg, range_len, function(err, digest_http){
-		sys.puts("url="+url+" hex="+digest_http);
+		//sys.puts("url="+url+" hex="+digest_http);
 		completed_cb(null, true);
 		if(false){
 			//sys.puts("url="+url+" hex="+digest_http);
