@@ -23,10 +23,9 @@ var http_get	= require('../vendor/node-helpers/ez_http').http_get;
 var ttyc	= require('../vendor/node-helpers/ez_tty_color');
 
 
-var url		= "http://localhost/~jerome/Videos/Fearless.avi";
-//var url	= "http://localhost:4550/http://127.0.0.1/~jerome/Videos/Fearless.avi";
+//var url		= "http://localhost/~jerome/Videos/Fearless.avi";
+var url		= "http://localhost:4550/http://127.0.0.1/~jerome/Videos/Fearless.avi";
 var ref_fname	= '/home/jerome/Videos/Fearless.avi';
-var verbose	= 0
 //var url	= process.argv[2];
 //var ref_fname	= process.argv[3];
 
@@ -46,8 +45,6 @@ for(;optind < process.argv.length; optind){
 	}else if( key == "-r" || key == "--req_length_rand" ){
 		range_len_rand	= parseInt(val);
 		optind		+= 1;
-	}else if( key == "-v" || key == "--verbose" ){
-		verbose++;
 	}else if( key == "-h" || key == "--help" ){
 		sys.puts("usage: oload_stress_test [-c ncnx] [-l nbytes] [-r nbytes] URL [ref_fname]")
 		sys.puts("-c|--concurent ncnx\t\tDetermine the number of concurent connections");
@@ -66,9 +63,9 @@ sys.puts("url="+url);
 sys.puts("ref_fname="+ref_fname);
 
 // make that tunable via cmdline options
-var range_len_base	= 3*1024*1024;
-var range_len_rand	= 512*1024;
-var nb_concurent	= 3;
+var range_len_base	= 300*1024;
+var range_len_rand	= 50*1024;
+var nb_concurent	= 25;
 
 var filesize		= fs.statSync(ref_fname).size
 
@@ -113,8 +110,8 @@ if( true ){
 	
 		http_get(url, range_beg, range_len, function(error, data){
 			//sys.puts("stress: beg="+range_beg+" len="+range_len+" error="+error);
-			if( error !== null )	sys.print(".");
-			else			sys.puts("beg="+range_beg+" len="+range_len+" succeed="+succeed);
+			if( error === null )	sys.print(".");
+			else			sys.log("beg="+range_beg+" len="+range_len+" error="+error);
 			http_request_multiple();
 		})
 	}
