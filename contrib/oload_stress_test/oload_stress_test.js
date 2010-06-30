@@ -14,18 +14,11 @@
 var sys		= require('sys');
 var fs		= require('fs');
 // local dependancies
-var cmp_digest	= require('./accuracy_test').cmp_digest;
+var cmp_digest	= require('./test_accuracy').cmp_digest;
 var http_get	= require('../vendor/node-helpers/ez_http').http_get;
 var ezhttp	= require('../vendor/node-helpers/ez_http');
 var ttyc	= require('../vendor/node-helpers/ez_tty_color');
 var strutils	= require('../vendor/node-helpers/strutils');
-
-
-//var url		= "http://localhost/~jerome/Videos/Fearless.avi";
-//var url	= "http://localhost:4550/http://127.0.0.1/~jerome/Videos/Fearless.avi";
-//var ref_fname	= '/home/jerome/Videos/Fearless.avi';
-//var ref_fname	= null;
-
 
 // default parameters for cmdline options
 var range_len_base	= null;
@@ -39,14 +32,14 @@ var optind	= 2;
 for(;optind < process.argv.length; optind++){
 	var key	= process.argv[optind];
 	var val	= process.argv[optind+1];
-	sys.puts("key="+key+" val="+val);
+	//sys.puts("key="+key+" val="+val);
 	if( key == "-c" || key == "--concurent" ){
 		nb_concurent	= parseInt(val);
 		optind		+= 1;
 	}else if( key == "-l" || key == "--req_length_base" ){
 		range_len_base	= strutils.string_to_size(val);
 		optind		+= 1;
-		sys.puts("range_len_base="+range_len_base);
+		//sys.puts("range_len_base="+range_len_base);
 	}else if( key == "-r" || key == "--req_length_rand" ){
 		range_len_rand	= strutils.string_to_size(val);
 		optind		+= 1;
@@ -149,6 +142,9 @@ function do_test_stress()
 	ezhttp.http_resp_headers(url, callback);
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+//	main program								//
+//////////////////////////////////////////////////////////////////////////////////
 if( ref_fname !== undefined )	do_test_accuracy();
 else				do_test_stress();
 
