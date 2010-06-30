@@ -7,9 +7,6 @@
  * - load test
  *   - get an url on a static content
  *   - just hammer the server with random request
- *
- * TODO
- * - put the oload tester in contrib/
 */
 
 
@@ -23,37 +20,33 @@ var ezhttp	= require('../vendor/node-helpers/ez_http');
 var ttyc	= require('../vendor/node-helpers/ez_tty_color');
 var strutils	= require('../vendor/node-helpers/strutils');
 
-sys.puts( strutils.string_to_size('300') );
-sys.puts( strutils.string_to_size('300b') );
-sys.puts( strutils.string_to_size('300k') );
-process.exit();
+
 //var url		= "http://localhost/~jerome/Videos/Fearless.avi";
 //var url	= "http://localhost:4550/http://127.0.0.1/~jerome/Videos/Fearless.avi";
 //var ref_fname	= '/home/jerome/Videos/Fearless.avi';
 //var ref_fname	= null;
-var url		= process.argv[2];
-var ref_fname	= process.argv[3];
 
-// make that tunable via cmdline options
+
+// default parameters for cmdline options
 var range_len_base	= null;
 var range_len_rand	= null;
 var nb_concurent	= 1;
-
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //	parse cmdline								//
 //////////////////////////////////////////////////////////////////////////////////
 var optind	= 2;
-for(;optind < process.argv.length; optind){
+for(;optind < process.argv.length; optind++){
 	var key	= process.argv[optind];
 	var val	= process.argv[optind+1];
+	sys.puts("key="+key+" val="+val);
 	if( key == "-c" || key == "--concurent" ){
 		nb_concurent	= parseInt(val);
 		optind		+= 1;
 	}else if( key == "-l" || key == "--req_length_base" ){
 		range_len_base	= strutils.string_to_size(val);
 		optind		+= 1;
+		sys.puts("range_len_base="+range_len_base);
 	}else if( key == "-r" || key == "--req_length_rand" ){
 		range_len_rand	= strutils.string_to_size(val);
 		optind		+= 1;
@@ -74,8 +67,9 @@ for(;optind < process.argv.length; optind){
 	}
 }
 
-
-
+// get url/ref_fname from cmdline
+var url		= process.argv[optind++];
+var ref_fname	= process.argv[optind++];
 
 //////////////////////////////////////////////////////////////////////////////////
 //	accuracy test								//
