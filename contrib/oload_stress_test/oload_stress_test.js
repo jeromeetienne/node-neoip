@@ -52,10 +52,10 @@ for(;optind < process.argv.length; optind){
 		nb_concurent	= parseInt(val);
 		optind		+= 1;
 	}else if( key == "-l" || key == "--req_length_base" ){
-		range_len_base	= parseInt(val);
+		range_len_base	= strutils.string_to_size(val);
 		optind		+= 1;
 	}else if( key == "-r" || key == "--req_length_rand" ){
-		range_len_rand	= parseInt(val);
+		range_len_rand	= strutils.string_to_size(val);
 		optind		+= 1;
 	}else if( key == "-h" || key == "--help" ){
 		sys.puts("usage: oload_stress_test [-c ncnx] [-l nbytes] [-r nbytes] URL [filename]");
