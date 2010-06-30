@@ -92,6 +92,7 @@ function do_test_accuracy()
 	// display informations headers
 	sys.log("Check accuracy between url "+url);
 	sys.log("and file "+ ref_fname);
+	sys.log("Total content length "+filesize+"-bytes");
 	sys.log("using "+nb_concurent+" concurent requests");
 	sys.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
 	
@@ -130,7 +131,7 @@ function do_test_stress()
 
 		// display informations headers
 		sys.log("Stress server at url "+url);
-		sys.log("Total content length "+filesize);
+		sys.log("Total content length "+filesize+"-bytes");
 		sys.log("using "+nb_concurent+" concurent requests");
 		sys.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
 	
