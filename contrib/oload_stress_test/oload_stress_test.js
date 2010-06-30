@@ -19,15 +19,27 @@ var fs		= require('fs');
 // local dependancies
 var cmp_digest	= require('./accuracy_test').cmp_digest;
 var http_get	= require('../vendor/node-helpers/ez_http').http_get;
-
+var ezhttp	= require('../vendor/node-helpers/ez_http');
 var ttyc	= require('../vendor/node-helpers/ez_tty_color');
+var strutils	= require('../vendor/node-helpers/strutils');
 
-
+sys.puts( strutils.string_to_size('300') );
+sys.puts( strutils.string_to_size('300b') );
+sys.puts( strutils.string_to_size('300k') );
+process.exit();
 //var url		= "http://localhost/~jerome/Videos/Fearless.avi";
-var url		= "http://localhost:4550/http://127.0.0.1/~jerome/Videos/Fearless.avi";
-var ref_fname	= '/home/jerome/Videos/Fearless.avi';
-//var url	= process.argv[2];
-//var ref_fname	= process.argv[3];
+//var url	= "http://localhost:4550/http://127.0.0.1/~jerome/Videos/Fearless.avi";
+//var ref_fname	= '/home/jerome/Videos/Fearless.avi';
+//var ref_fname	= null;
+var url		= process.argv[2];
+var ref_fname	= process.argv[3];
+
+// make that tunable via cmdline options
+var range_len_base	= null;
+var range_len_rand	= null;
+var nb_concurent	= 1;
+
+
 
 //////////////////////////////////////////////////////////////////////////////////
 //	parse cmdline								//
@@ -46,35 +58,39 @@ for(;optind < process.argv.length; optind){
 		range_len_rand	= parseInt(val);
 		optind		+= 1;
 	}else if( key == "-h" || key == "--help" ){
-		sys.puts("usage: oload_stress_test [-c ncnx] [-l nbytes] [-r nbytes] URL [ref_fname]")
-		sys.puts("-c|--concurent ncnx\t\tDetermine the number of concurent connections");
+		sys.puts("usage: oload_stress_test [-c ncnx] [-l nbytes] [-r nbytes] URL [filename]");
+		sys.puts(" - If <filename> is present, an accuracy test is performed. AKA data are loaded from");
+		sys.puts("   the reference file and from the <URL> and both are checked to be equal.");
+		sys.puts(" - If <filename> is not present, a stress test is performed. AKA data are loaded from");
+		sys.puts("   the url as fast as possible.");
+		sys.puts("");
+		sys.puts("-c|--concurent ncnx\t\tDetermine the number of concurent connections during the tests.");
 		sys.puts("-l|--req_length_base nbytes\tThe base length of the request to make");
 		sys.puts("-r|--req_length_rand nbytes\tThe randomized length of the request to make");
 		process.exit(0);
+	}else{
+		// if the option doesnt exist, consider it is the first non-option parameters
+		break;
 	}
 }
 
-//process.exit();
 
-//url	= process.argv[optind];
-
-
-sys.puts("url="+url);
-sys.puts("ref_fname="+ref_fname);
-
-// make that tunable via cmdline options
-var range_len_base	= 300*1024;
-var range_len_rand	= 50*1024;
-var nb_concurent	= 25;
-
-var filesize		= fs.statSync(ref_fname).size
 
 
 //////////////////////////////////////////////////////////////////////////////////
 //	accuracy test								//
 //////////////////////////////////////////////////////////////////////////////////
 
-if( false && ref_fname ){
+function do_test_accuracy()
+{
+	var filesize	= fs.statSync(ref_fname).size
+	// set default range_len_base/range_len_rand
+	range_len_base	= range_len_base || (filesize / 20.0);
+	range_len_rand	= range_len_rand || (range_len_base / 2.0);
+	// clamp range_len_base/range_len_rand
+	range_len_base	= Math.min(range_len_base, filesize);
+	range_len_rand	= Math.min(range_len_rand, range_len_base);
+
 	var cmp_digest_multiple	= function(){
 		var range_len	= range_len_base - range_len_rand + Math.floor(Math.random()*range_len_rand*2);
 		var range_beg	= Math.floor(Math.random()*(filesize - range_len));
@@ -95,15 +111,14 @@ if( false && ref_fname ){
 	for(var i = 0; i < nb_concurent; i++ ){
 		cmp_digest_multiple();
 	}
-	// TODO here dont go on...
-	// - sleep until ?... i dunno
 }
 
 //////////////////////////////////////////////////////////////////////////////////
 //	stress	test								//
 //////////////////////////////////////////////////////////////////////////////////
 
-if( true ){
+function do_test_stress()
+{
 	var http_request_multiple	= function(){
 		var range_len	= range_len_base - range_len_rand + Math.floor(Math.random()*range_len_rand*2);
 		var range_beg	= Math.floor(Math.random()*(filesize - range_len));
@@ -116,15 +131,30 @@ if( true ){
 		})
 	}
 	
+	var callback	= function(error, headers){
+		//sys.puts('HEADERS: ' + sys.inspect(headers));
+		filesize	= parseInt(headers['content-length'], 10);
+		// set default range_len_base/range_len_rand
+		range_len_base	= range_len_base || Math.floor(filesize / 20);
+		range_len_rand	= range_len_rand || Math.floor(range_len_base / 2);
+		// clamp range_len_base/range_len_rand
+		range_len_base	= Math.min(range_len_base, filesize);
+		range_len_rand	= Math.min(range_len_rand, range_len_base);
+
+		// display informations headers
+		sys.log("Stress server at url "+url);
+		sys.log("Total content length "+filesize);
+		sys.log("using "+nb_concurent+" concurent requests");
+		sys.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
 	
-	// display informations headers
-	sys.log("Stress server at url "+url);
-	sys.log("using "+nb_concurent+" concurent requests");
-	sys.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
-	
-	for(var i = 0; i < nb_concurent; i++ ){
-		http_request_multiple();
+		for(var i = 0; i < nb_concurent; i++ ){
+			http_request_multiple();
+		}
 	}
+	
+	ezhttp.http_resp_headers(url, callback);
 }
 
+if( ref_fname !== undefined )	do_test_accuracy();
+else				do_test_stress();
 
