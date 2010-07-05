@@ -8,9 +8,9 @@ VERSION="1.0.0"
 
 DST_ROOT:=/
 DST_BIN	:=$(DESTDIR)/usr/bin
-DST_LIB	:=$(DESTDIR)/usr/local/lib
+DST_LIB	:=~/.node_libraries
 PWD 	:= $(shell pwd)
-SRC_DIR	:=../node-neoip
+SRC_DIR	:= $(shell pwd)/../node-neoip
 
 ################################################################################
 #	install/uninstall target
@@ -19,6 +19,8 @@ SRC_DIR	:=../node-neoip
 install: install_prod
 
 install_dev:
+	ln -sf $(PWD) $(DST_LIB)/$(PKGNAME)-$(VERSION)
+	ln -sf $(DST_LIB)/$(PKGNAME)-$(VERSION) $(DST_LIB)/$(PKGNAME)
 	mkdir -p $(DST_BIN)
 	ln -sf $(PWD)/neoip-url $(DST_BIN)/neoip-url
 
