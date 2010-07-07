@@ -3,6 +3,7 @@
   - such a tool will give working test + stress test
   - how to check casto client is receiving the proper data
 - node-chargen provides the source of the stream
+- documents casti call url in a man page
 **********************************************************************
 casti_ctrl_t:
 - look in book how to write such object
