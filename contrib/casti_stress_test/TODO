@@ -1,0 +1,33 @@
+- make a casti_ctrl_t
+- write a test tool which controls the number of stream and number of clients per stream.
+  - such a tool will give working test + stress test
+  - how to check casto client is receiving the proper data
+- node-chargen provides the source of the stream
+**********************************************************************
+casti_ctrl_t:
+- look in book how to write such object
+- ctor(opts, callback)
+  - opts contains all url options
+  - what about the refresh period ? in the same or in another ?
+  - callback(error, cast_privhash)
+- is_started()
+- start()
+- stop()
+- dtor() = if is_started() then stop()
+*************************************************************************
+casto_testclient_t:
+- used for test and to hold knowledge on how to code a client, so all options
+  must be available
+- ctor(opts, callback)
+  - callback(error)
+  - opts = {
+	cast_privhash
+	cast_name
+    }
+- how to test proper data are received and received in time
+  - meanwhile just print it
+*************************************************************************
+how to write the test:
+- start a node-chargen in 127.0.0.1 8124
+- create N casti_ctrl pointing on this node-chargen
+- create M http client to casto reading those stream
