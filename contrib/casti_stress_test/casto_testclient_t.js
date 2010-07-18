@@ -22,12 +22,11 @@ var casto_testclient_t	= function(opts, event_cb){
 	var cast_privhash	= opts.cast_privhash;
 	var cast_name		= opts.cast_name;
 
-
 	// build the url_str
 	var url_str		= base_url + "/" + cast_privhash + "/" + cast_name;
 // TODO dunno why but the actual url is never
 //url_str	= "http://127.0.0.1:8124/";
-sys.puts("url_str="+url_str);
+console.log("url_str="+url_str);
 	var recved_len	= 0;
 	var notified_len= 0;
 	var notify_unit	= opts.notify_unit || 1024;
@@ -40,8 +39,8 @@ sys.puts("url_str="+url_str);
 	// create the request
 	var request	= client.request('GET', url.pathname, {'host': url.host});
 	request.addListener('response', function(response){
-		sys.puts('STATUS: ' + response.statusCode);
-		sys.puts('HEADERS: ' + JSON.stringify(response.headers));
+		console.log('STATUS: ' + response.statusCode);
+		console.log('HEADERS: ' + JSON.stringify(response.headers));
 		// Handle faillure at http level
 		if(response.statusCode != 200){
 			event_cb("error", "statusCode="+response.statusCode);
@@ -51,7 +50,7 @@ sys.puts("url_str="+url_str);
 		event_cb("cnx_begin", null);
 		//response.setEncoding('utf8');
 		response.addListener('data', function( chunk ){
-			//sys.puts("chunk len="+chunk.length);
+			//console.log("chunk len="+chunk.length);
 			// update recved_len
 			recved_len	+= chunk.length;
 			// notify the recved_size in notify_unit
@@ -63,8 +62,10 @@ sys.puts("url_str="+url_str);
 			notified_len		= recved_len;
 		});
 		response.addListener('end', function(){
-			a.b += 1;
-			sys.puts("Connection ended");
+			// log the event
+			console.log("Connection ended");
+			// notify the caller
+			event_cb("cnx_end", null);
 		}); 
 	});
 	request.end();	
