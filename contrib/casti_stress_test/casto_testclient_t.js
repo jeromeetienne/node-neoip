@@ -5,33 +5,28 @@ var sys		= require('sys');
 
 /**
  * opts:
- * - opts.base_url: the base url of neoip-casto
- * - opts.cast_privhash: the cast_privhash for this stream
- * - opts.cast_name: the cast_name for this stream
- * - opts.notify_unit: the unit to notify recved_data (default to 1024)
- *
- * event_cb(event_typem event_data):
- * - "cnx_begin"/null: server connected
- * - "cnx_end"/null: server disconnected
- * - "recved_data"/nunits: when data is received (nunit is the amount of data
- *   in 'unit'). it is notified when there is at least one unit to notified.
+ * - opts.stream_url	: url for the stream
+ * - opts.notify_unit	: the unit to notify recved_data (default to 1024)
+ * - opts.event_cb	: callback event_cb(event_typem event_data):
+ *   - "cnx_begin"/null: server connected
+ *   - "cnx_end"/null: server disconnected
+ *   - "recved_data"/nunits: when data is received (nunit is the amount of data
+ *     in 'unit'). it is notified when there is at least one unit to notified.
 */
-var casto_testclient_t	= function(opts, event_cb){
+var casto_testclient_t	= function(opts){
+	// sanity check - all mandatory fields must be present
+	console.assert(opts.stream_url);
+	console.assert(opts.event_cb);
 	// alias some variables to ease readability
-	var base_url		= opts.base_url;
-	var cast_privhash	= opts.cast_privhash;
-	var cast_name		= opts.cast_name;
+	var stream_url	= opts.stream_url;
+	var event_cb	= opts.event_cb;
 
-	// build the url_str
-	var url_str		= base_url + "/" + cast_privhash + "/" + cast_name;
-// TODO dunno why but the actual url is never
-//url_str	= "http://127.0.0.1:8124/";
-console.log("url_str="+url_str);
+	// init local variables
 	var recved_len	= 0;
 	var notified_len= 0;
 	var notify_unit	= opts.notify_unit || 1024;
 	// create the http client
-	var url		= require('url').parse(url_str);
+	var url		= require('url').parse(stream_url);
 	var client	= http.createClient((url.port||80), url.hostname);
 	// bind error cases at the socket level
 	client.addListener("error"	, function(e){ event_cb("error", e.message);	});
@@ -71,16 +66,22 @@ console.log("url_str="+url_str);
 	request.end();	
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////
 //	main programm								//
 //////////////////////////////////////////////////////////////////////////////////
 if( process.argv[1] == __filename ){
-	var opts	= {
+
+	// build stream_url for neoip-casto
+	var stream_url	= require('./casto_url').create({
 		"base_url"	: "http://localhost:4560",
 		"cast_privhash"	: "a761ce3a",
-		"cast_name"	: "superstream"
-	}
+		"cast_name"	: "superstream"		
+	});
+
+// TODO dunno why but the actual url is never
+stream_url	= "http://127.0.0.1:8124/";
+console.log("stream_url="+stream_url);
+
 	var event_cb	= function(event_type, event_data){
 		//console.log("event_type="+event_type);
 		//console.log("event_data="+event_data);
@@ -91,5 +92,8 @@ if( process.argv[1] == __filename ){
 			}
 		}
 	}
-	var client	= new casto_testclient_t(opts, event_cb);
+	var client	= new casto_testclient_t({
+		stream_url	: stream_url,
+		event_cb	: event_cb
+	});
 }
