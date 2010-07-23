@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// example: node casto_url.js  -s http://google.com http://localhost:4560 a761ce3a superstream
 
 /**
  * Create an url for neoip-casto
@@ -39,10 +40,15 @@ if( process.argv[1] == __filename ){
 	//////////////////////////////////////////////////////////////////////////////////
 	//	parse cmdline								//
 	//////////////////////////////////////////////////////////////////////////////////
-	var disp_usage	= function(){
-		console.log("usage: casto_url base_url cast_privhash cast_name");
+	var disp_usage	= function(prefix){
+		if(prefix)	console.log(prefix + "\n");
+		console.log("usage: casto_url [-s url] base_url cast_privhash cast_name");
 		console.log("");
 		console.log("Build a url for neoip-casto");
+		console.log("");
+		console.log("-v|--verbose\tIncrease the verbose level (for debug).");
+		console.log("-s|--mdata_srv_uri\n\t\tSet url for the mdata_srv.");
+		console.log("-h|--help\tDisplay the inline help.");
 	}
 	var optind	= 2;
 	for(;optind < process.argv.length; optind++){
