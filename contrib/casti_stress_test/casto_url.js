@@ -1,5 +1,77 @@
 #!/usr/bin/env node
-// example: node casto_url.js  -s http://google.com http://localhost:4560 a761ce3a superstream
+/* Man page in perlpod format. to view with "pod2man thisfile | man -l -"
+=pod
+
+=head1 NAME
+
+casto_url - build a url for neoip-casto
+
+=head1 SYNOPSIS
+
+B<casto_url> [-s mdata_srv_uri] base_url cast_privhash cast_name
+
+=head1 DESCRIPTION
+
+Build an url for neoip-casto. This url will point on a normal http stream.
+Thus the client may be any client which understand http, it doesnt have to modified
+to use this url.
+
+=over
+
+=item I<base_url>
+
+The base_url is the neoip-casto base url. It is not autodetected.
+TODO make it autodetectable (likely with a neoip-appdetect applications
+or by simply make a dependancy in the code)
+
+=item I<cast_privhash>
+
+This is the hash of the broadcast password (aka casti_privtext). This is used
+to ensure the http client got the permission to read the broadcast.
+
+=item I<cast_name>
+
+cast_name is the name of the broadcast. This name is unique inside the I<mdata_srv_uri>.
+
+=back
+
+=head1 OPTIONS
+
+The following option are available:
+
+=over
+
+=item B<-s|--mdata_srv_uri> I<url>
+
+Use to set the url for the metadata server. This server got the metadata information
+about the broadcast. (OPTIONAL)
+
+=back
+
+=head1 EXAMPLES
+
+=over
+
+=item B<basic usage>
+
+$ casto_url http://localhost:4560 a761ce3a superstream
+
+This will display the following in stdout
+
+http://localhost:4560/a761ce3a/superstream
+
+=item B<specifying mdata_srv_uri>
+
+$ casto_url -s http://example.com http://localhost:4560 a761ce3a superstream
+
+This will display the following in stdout
+
+http://localhost:4560/a761ce3a/superstream?mdata_srv_uri=http%3A//example.com
+
+=cut
+
+
+*/
 
 /**
  * Create an url for neoip-casto
@@ -9,6 +81,9 @@
  * - opts.mdata_srv_uri	: url of the nameserver (OPTIONAL)
  *
  * - NOTE: no detection of the neoip-casto apps is done
+ *
+ * @return the url for the stream out of neoip-casto
+ * @type String
 */
 var create = function(opts){
 	// sanity check - all mandatory fields MUST be present
@@ -44,7 +119,7 @@ if( process.argv[1] == __filename ){
 		if(prefix)	console.log(prefix + "\n");
 		console.log("usage: casto_url [-s url] base_url cast_privhash cast_name");
 		console.log("");
-		console.log("Build a url for neoip-casto");
+		console.log("Build an url for neoip-casto");
 		console.log("");
 		console.log("-v|--verbose\tIncrease the verbose level (for debug).");
 		console.log("-s|--mdata_srv_uri\n\t\tSet url for the mdata_srv.");
