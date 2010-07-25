@@ -1,4 +1,13 @@
-var assert	= require('assert');
+/**
+ * casti_ctrl_t
+ * - periodic refresh of the stream
+ *   - use neoip_rpc2.call
+ * - if rpc_call failed, notify error to caller
+ *   - do a event_cb(type,data)
+ * - 
+*/
+
+
 var neoip_rpc	= require('../../lib/neoip_rpc');
 
 /**
@@ -10,8 +19,8 @@ var casti_ctrl_t	= function(opts, user_cb){
 	var self		= {};
 	var refresh_timerid	= null;
 	var rpc_call		= null;
-	var refresh_period	= opts['refresh_period'] || 1*1000;
-	var call_url		= opts['call_url'] || "http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js";
+	var refresh_period	= opts['refresh_period']	|| 1*1000;
+	var call_url		= opts['call_url']		|| "http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js";
 	var call_args		= opts['call_args'];
 	
 	var ctor	= function(){
@@ -21,7 +30,7 @@ var casti_ctrl_t	= function(opts, user_cb){
 	
 	var request_stream	= function(){
 		// sanity check
-		assert.ok(rpc_call === null);
+		console.assert(rpc_call === null);
 		
 		var method_name	= "request_stream";
 		var rpc_call	= new neoip_rpc.call(call_url, method_name, call_args, function(cast_privhash){
@@ -34,7 +43,7 @@ var casti_ctrl_t	= function(opts, user_cb){
 	}
 	var release_stream	= function(){
 		// sanity check
-		assert.ok(rpc_call === null);
+		console.assert(rpc_call === null);
 		
 	}
 	
@@ -42,8 +51,8 @@ var casti_ctrl_t	= function(opts, user_cb){
 		// log to debug
 		console.log("refresh cb");
 		// sanity check
-		assert.ok(rpc_call === null);
-		assert.ok(refresh_timerid !== null);
+		console.assert(rpc_call === null);
+		console.assert(refresh_timerid !== null);
 		// start the timeout
 		//refresh_timerid	= setInterval(refresh_cb, refresh_period);	}
 	
@@ -52,7 +61,7 @@ var casti_ctrl_t	= function(opts, user_cb){
 	*/
 	var start	= function(){
 		// sanity check
-		assert.ok( !self.is_started() );
+		console.assert( !self.is_started() );
 		// start the timeout
 		refresh_timerid	= setInterval(refresh_cb, 0);
 	}

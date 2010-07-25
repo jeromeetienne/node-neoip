@@ -3,15 +3,6 @@
 var http	= require('http');
 
 /*
-- ctor
-  - init var
-  - launch client
-  - start idle timeout
-- dtor
-  - stop client
-  - stop idle timeout
-  
-  
 - prototype approche is well known and well understood
 - does it support protected/private ?
   - yep but only at function level, not at the object level
@@ -24,6 +15,10 @@ var http	= require('http');
 - ptototype approche limit the possibility of closure
 - prototype is not the common principle in js
 
+- for callback
+  - always report error when possible
+  - if only a few different values may be reported, consider succeed_cb/failure_cb
+  - if many different values may be reported, considere a event_cb(even_type, event_data)
 */
 
 /**
@@ -38,11 +33,11 @@ var http	= require('http');
  *   - "idle_timeout"/null: when no data has been received for 
 */
 var casto_testclient_t	= function(ctor_opts){
+	// alias 'this' for this object, to self
 	var self	= this;
 	// sanity check - all mandatory fields must be present
 	console.assert(ctor_opts.stream_url);
-	console.assert(ctor_opts.event_cb);
-	// alias some variables to ease readability
+	// copy ctor_opts + set default values if needed
 	var stream_url		= ctor_opts.stream_url;
 	var event_cb		= ctor_opts.event_cb		|| function(event_type, event_data){};
 	var notify_unit		= ctor_opts.notify_unit		|| 1024;
@@ -94,8 +89,8 @@ var casto_testclient_t	= function(ctor_opts){
 		var url		= require('url').parse(stream_url);
 		var client	= http.createClient((url.port||80), url.hostname);
 		// bind error cases at the socket level
-		client.addListener("error"	, function(e){ event_cb("error", e.message);	});
-		client.addListener("timeout"	, function(e){ event_cb("error", e.message);	});
+		client.on("error"	, function(e){ event_cb("error", e.message); });
+		client.on("timeout"	, function(e){ event_cb("error", e.message); });
 		// create the request
 		client_req	= client.request('GET', url.pathname, {'host': url.host});
 		client_req.on('response', function(client_res){
