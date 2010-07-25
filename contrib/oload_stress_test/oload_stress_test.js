@@ -8,7 +8,7 @@
  *   - get an url on a static content
  *   - just hammer the server with random request
  * Usage Example:
- * ./oload_stress_test.js -l 30k -r 5k `neoip-url http://lo^Clhost/~jerome/Videos/Fearless.mp4` ~/Videos/Fearless.mp4
+ * ./oload_stress_test.js -l 30k -r 5k `neoip-url http://localhost/~jerome/Videos/Fearless.mp4` ~/Videos/Fearless.mp4
 */
 
 

@@ -7,7 +7,7 @@ var sys		= require('sys');
  * opts:
  * - opts.stream_url	: url for the stream
  * - opts.notify_unit	: the unit to notify recved_data (default to 1024)
- * - opts.event_cb	: callback event_cb(event_typem event_data):
+ * - opts.event_cb	: callback event_cb(event_type, event_data):
  *   - "cnx_begin"/null: server connected
  *   - "cnx_end"/null: server disconnected
  *   - "recved_data"/nunits: when data is received (nunit is the amount of data
@@ -75,7 +75,7 @@ if( process.argv[1] == __filename ){
 	var stream_url	= require('./casto_url').create({
 		"base_url"	: "http://localhost:4560",
 		"cast_privhash"	: "a761ce3a",
-		"cast_name"	: "superstream"		
+		"cast_name"	: "superstream"
 	});
 
 // TODO dunno why but the actual url is never

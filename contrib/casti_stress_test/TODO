@@ -1,3 +1,8 @@
+GOAL:
+- make a test for neoip-webpack
+  - testing casto/casti and oload
+  - stress test + running test, both launchable by makefile
+********************************************************************************
 - make a casti_ctrl_t
 - write a test tool which controls the number of stream and number of clients per stream.
   - such a tool will give working test + stress test
