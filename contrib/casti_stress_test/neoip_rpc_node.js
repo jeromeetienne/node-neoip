@@ -12,15 +12,13 @@ var call = function(ctor_opts){
 	//////////////////////////////////////////////////////////////////////////
 	// alias 'this' for this object, to self
 	var self	= this;
-	// sanity check - all mandatory fields must be present
-	console.assert(ctor_opts.call_url);
-	console.assert(ctor_opts.method_name);
 	// copy ctor_opts + set default values if needed
-	var call_url	= ctor_opts.call_url;
-	var method_name	= ctor_opts.method_name;
+	var call_url	= ctor_opts.call_url	|| console.assert(ctor_opts.call_url);
+	var method_name	= ctor_opts.method_name	|| console.assert(ctor_opts.method_name);
 	var method_args	= ctor_opts.method_args	|| [];
 	var success_cb	= ctor_opts.success_cb	|| function(){};
 	var failure_cb	= ctor_opts.failure_cb	|| function(){};
+	var verbose	= ctor_opts.verbose		|| 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	//		ctor/dtor						//
@@ -29,7 +27,7 @@ var call = function(ctor_opts){
 		client_start();
 	}
 	var dtor	= function(){
-		console.log("Stop neoip rpc call");
+		//console.log("Stop neoip rpc call");
 		client_stop();
 	}
 
@@ -47,26 +45,26 @@ var call = function(ctor_opts){
 		// create the request	  
 		var client	= http.createClient((url.port||80), url.hostname);
 		// bind error cases at the socket level
-		client.on("error"	, failure_cb);
-		client.on("timeout"	, failure_cb);
+		client.on("error"	, function(e){ failure_cb({code: -1, string: e.message});});
+		client.on("timeout"	, function(e){ failure_cb({code: -1, string: e.message});});
 		// create the request
 		client_req	= client.request('GET', url_path, {'host': url.host});
 		client_req.on('response', function(client_res){
 			// log to debug
-			console.log('STATUS: ' + client_res.statusCode);
-			console.log('HEADERS: ' + JSON.stringify(client_res.headers));
+			if( verbose )	console.log('STATUS: ' + client_res.statusCode);
+			if( verbose )	console.log('HEADERS: ' + JSON.stringify(client_res.headers));
 			// Handle faillure at http level
 			if(client_res.statusCode != 200)
 				return failure_cb(new Error("http statuscode="+client_res.statuscode));
 			client_res.setEncoding('utf8');
 			client_res.on('data', function( reply_json ){
-				console.log('BODY: ' + reply_json);
+				if( verbose )	console.log('BODY: ' + reply_json);
 				// convert reply_json to native data
 				var reply_data	= JSON.parse(reply_json);
 				// handle faillure/success_cb at the call level
 				if( reply_data['fault'] ){
-					console.dir(reply_data);
-					failure_cb();	// TODO what about the error itself	
+					if( verbose > 1 )	console.dir(reply_data);
+					failure_cb(reply_data['fault']);	// TODO what about the error itself	
 				}else{
 					var returned_val= reply_data['returned_val'];
 					success_cb(returned_val);
