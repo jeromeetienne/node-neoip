@@ -150,6 +150,15 @@ exports.create	= casti_ctrl_t.create;
 //	main programm								//
 //////////////////////////////////////////////////////////////////////////////////
 if( process.argv[1] == __filename ){
+// TODO make this a good cmdline tool for testing
+// thus making it a good testing tool
+// --no_gracefull_shutdown
+// --casti_opts key value
+// --call_url url
+// --req_timer_delay delay_msec
+// --verbose
+// if call_url unspecified, try to autodetect casti on localhost
+	
 	var casti_ctrl	= casti_ctrl_t.create({
 		call_url	: "http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js",
 		casti_opts	: {
