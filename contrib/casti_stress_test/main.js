@@ -7,6 +7,7 @@
  * - potentially a casto_bwlimiter_t
 */
 
+
 if(false){
 	var casti_ctrl_t	= require('./casti_ctrl_t');	
 	var casti_ctrl	= casti_ctrl_t.create({
@@ -28,7 +29,7 @@ if(false){
 // url for casto "http://localhost:4560/a761ce3a/superstream"
 
 
-if( true ){
+if( false ){
 	var sys		= require('sys');
 	
 	var neoip_rpc	= require('./neoip_rpc_node');

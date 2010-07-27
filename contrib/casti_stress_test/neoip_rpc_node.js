@@ -18,7 +18,7 @@ var call = function(ctor_opts){
 	var method_args	= ctor_opts.method_args	|| [];
 	var success_cb	= ctor_opts.success_cb	|| function(){};
 	var failure_cb	= ctor_opts.failure_cb	|| function(){};
-	var verbose	= ctor_opts.verbose		|| 0;
+	var verbose	= ctor_opts.verbose	|| 0;
 
 	//////////////////////////////////////////////////////////////////////////
 	//		ctor/dtor						//

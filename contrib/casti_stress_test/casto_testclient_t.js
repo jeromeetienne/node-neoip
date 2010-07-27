@@ -46,6 +46,7 @@ var casto_testclient_t	= function(ctor_opts){
 	var notify_unit		= ctor_opts.notify_unit		|| 1024;
 	var verbose		= ctor_opts.verbose		|| 0;
 	var idle_timer_delay	= ctor_opts.idle_timer_delay	|| 1*1000;
+	var max_recved_len	= ctor_opts.max_recved_len	|| null;
 	
 	//////////////////////////////////////////////////////////////////////////
 	//		ctor/dtor						//
@@ -121,12 +122,14 @@ var casto_testclient_t	= function(ctor_opts){
 				if(nb_chunks > 0)	event_cb("recved_size", nb_chunks);
 				// update notified_len
 				notified_len		= recved_len;
+				// notify the caller
+				if( recved_len >= max_recved_len )	event_cb("recved_len_maxed", null);
 			});
 			client_res.on('end', function(){
 				// log the event
 				if( verbose )	console.log("Connection ended");
 				// notify the caller
-				event_cb("cnx_end", null);
+				event_cb("cnx_closed", null);
 			}); 
 		});
 		client_req.end();		
@@ -154,6 +157,9 @@ casto_testclient_t.create	= function(ctor_opts){
 	return new casto_testclient_t(ctor_opts);
 }
 
+// export it via commonjs
+exports.create	= casto_testclient_t.create;
+
 //////////////////////////////////////////////////////////////////////////////////
 //	main programm								//
 //////////////////////////////////////////////////////////////////////////////////
@@ -165,6 +171,7 @@ if( process.argv[1] == __filename ){
 	cmdline_opts	= {
 		stream_url	: {},
 		verbose		: 0,
+		max_recved_len	: null,
 		notify_unit	: null,
 		nconcurent_cnx	: 1
 	};
@@ -175,6 +182,7 @@ if( process.argv[1] == __filename ){
 		console.log("Establish a connection with a http stream.");
 		console.log("- intended to test neoip-casto.");
 		console.log("");
+		console.log("-l|--max_recved_len lbytes\t\tSet the max amount of kbytes to receive.");
 		console.log("-n|--notify_unit bytes\t\tSet the amount of bytes to notify");
 		console.log("-v|--verbose\t\t\tIncrease the verbose level (for debug).");
 		console.log("-h|--help\t\t\tDisplay the inline help.");
@@ -184,7 +192,10 @@ if( process.argv[1] == __filename ){
 		var key	= process.argv[optind];
 		var val	= process.argv[optind+1];
 		//console.log("key="+key+" val="+val);
-		if( key == '-n' || key == "--notify_unit" ){
+		if( key == '-l' || key == "--max_recved_len" ){
+			cmdline_opts.max_recved_len	= parseInt(val);
+			optind		+= 1;
+		}else if( key == '-n' || key == "--notify_unit" ){
 			cmdline_opts.notify_unit	= parseInt(val);
 			optind		+= 1;
 		}else if( key == '-c' || key == "--nconcurent_cnx" ){
@@ -208,26 +219,24 @@ if( process.argv[1] == __filename ){
 		stream_url	= "http://127.0.0.1:8124/";
 		cmdline_opts.verbose	= 1
 	}
-
-
-	// build casto_client_ctrl ctor_opts
-	var ctor_opts	= {
-		stream_url	: stream_url,
-		event_cb	: function(event_type, event_data){
-			if( cmdline_opts.verbose ) console.log("event_type="+event_type+" event_data="+event_data);
-			if( event_type == "recved_size" ){
-				var nb_unit	= event_data;
-				for(var i = 0; i < nb_unit; i++){
-					require("sys").print('.');
-				}
-			}
-		}
-	};
-	ctor_opts.notify_unit	= cmdline_opts.notify_unit	|| null;
-	ctor_opts.verbose	= cmdline_opts.verbose		|| 0;
-
 	// create casto_client
 	for(var i = 0; i < cmdline_opts.nconcurent_cnx; i++ ){
-		var casto_client	= casto_testclient_t.create(ctor_opts);
+		var casto_client	= casto_testclient_t.create({
+			stream_url	: stream_url,
+			event_cb	: function(event_type, event_data){
+				if( cmdline_opts.verbose ) console.log("event_type="+event_type+" event_data="+event_data);
+				if( event_type == "recved_size" ){
+					var nb_unit	= event_data;
+					for(var i = 0; i < nb_unit; i++){
+						require("sys").print('.');
+					}
+				}else if(event_type == "recved_len_maxed"){
+					casto_client.destroy();
+				}
+			},
+			max_recved_len	: cmdline_opts.max_recved_len	|| null,
+			notify_unit	: cmdline_opts.notify_unit	|| null,
+			verbose		: cmdline_opts.verbose		|| 0
+		});
 	}
 }

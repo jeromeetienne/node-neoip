@@ -2,6 +2,26 @@ GOAL:
 - make a test for neoip-webpack
   - testing casto/casti and oload
   - stress test + running test, both launchable by makefile
+- both on the same code base with != parameter
+*************************************************************************
+how to write the test:
+- start a node-chargen in 127.0.0.1 8124
+- create N casti_ctrl pointing on this node-chargen
+  - wait until they are all published
+  - if it goes unpublish later, report a failure
+  - TODO in casti_ctrl give a state. ispublished/nopublished
+- check that node-chargen got the proper number of connection
+  - nb cast
+- create M http client to casto reading each of those streams
+  - exit when X size unit has been received
+- when all M casto client got their units, the test is over
+-----------------
+- for stress test, just use much bigger numbers
+  - set for the neoip_cast_tester cmdline
+  - launched from Makefile
+  - make test
+  - make stress_test
+- LATER: support multiple neoip-casto/neoip-casti instances
 ********************************************************************************
 - make a casti_ctrl_t
 - write a test tool which controls the number of stream and number of clients per stream.
@@ -32,8 +52,3 @@ casto_testclient_t:
     }
 - how to test proper data are received and received in time
   - meanwhile just print it
-*************************************************************************
-how to write the test:
-- start a node-chargen in 127.0.0.1 8124
-- create N casti_ctrl pointing on this node-chargen
-- create M http client to casto reading those stream

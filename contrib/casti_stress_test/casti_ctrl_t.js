@@ -17,6 +17,8 @@ var casti_ctrl_t	= function(ctor_opts){
 	var event_cb		= ctor_opts.event_cb		|| function(event_type, event_data){}
 	var req_timer_delay	= ctor_opts.req_timer_delay	|| 0.5*1000;
 	var verbose		= ctor_opts.verbose		|| 0;
+	// private methods
+	var cast_privhash	= null;
 
 	//////////////////////////////////////////////////////////////////////////
 	//		ctor/dtor						//
@@ -85,11 +87,19 @@ var casti_ctrl_t	= function(ctor_opts){
 			success_cb	: function(returned_val){
 				rpc_call_destroy();
 				req_timer_refresh();
-				if(returned_val.length > 0)	event_cb("ispublished", {cast_privhash: returned_val});			
-				else				event_cb("nopublished", null);
-				
+				if(returned_val.length > 0){
+				// mark this cast as "published"
+					cast_privhash	= returned_val;
+					event_cb("ispublished", {cast_privhash: returned_val});			
+				}else{
+					// mark this cast as "not published"
+					cast_privhash	= null;
+					event_cb("nopublished", null);
+				}
 			},
 			failure_cb	: function(fault){
+				// mark this cast as "not published"
+				cast_privhash	= null;
 				if( verbose )	console.log("failure: "+require('sys').inspect(fault));
 				rpc_call_destroy();
 				event_cb("rpc_error", null);
@@ -101,6 +111,8 @@ var casti_ctrl_t	= function(ctor_opts){
 		if( verbose > 1 )	console.log("rpc: rpc_call_release enter")
 		// sanity check
 		console.assert(rpc_call === null);
+		// mark this cast as "not published"
+		cast_privhash	= null;
 		// create the neoip_rpc.call
 		var co		= casti_opts;
 		rpc_call	= neoip_rpc.call.create({
@@ -130,8 +142,10 @@ var casti_ctrl_t	= function(ctor_opts){
 	ctor();
 	// return the public properties
 	return {
-		release	: start_release,
-		destroy	: dtor
+		release		: start_release,
+		published	: function(){ return cast_privhash !== null 	},
+		cast_privhash	: function(){ return cast_privhash;		},
+		destroy		: dtor
 	}
 }
 
@@ -223,20 +237,17 @@ if( process.argv[1] == __filename ){
 		};
 	}
 	
-	
-
-	// build casti_ctrl ctor_opts
-	var ctor_opts	= {
+	// init casti_ctrl
+	var casti_ctrl	= casti_ctrl_t.create({
 		call_url	: cmdline_opts.call_url,
 		casti_opts	: cmdline_opts.casti_opts,
 		event_cb	: function(event_type, event_data){
 			console.log("event_cb: type="+event_type+" data="+require('sys').inspect(event_data));
-		}
-	};
-	ctor_opts.req_timer_delay	= cmdline_opts.req_timer_delay	|| null;
-	ctor_opts.verbose		= cmdline_opts.verbose		|| 0;
-	// init casti_ctrl
-	var casti_ctrl	= casti_ctrl_t.create(ctor_opts);
+			console.log("casti_ctrl: published()="+casti_ctrl.published()+" cast_privhash()="+casti_ctrl.cast_privhash());
+		},
+		req_timer_delay	: cmdline_opts.req_timer_delay	|| null,
+		verbose		: cmdline_opts.verbose		|| 0
+	});
 
 	// init gracefull_shutdown if not specified otherwise in cmdline
 	if( cmdline_opts.no_gracefull_shutdown === false ){
