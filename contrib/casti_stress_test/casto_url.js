@@ -121,7 +121,6 @@ if( process.argv[1] == __filename ){
 		console.log("");
 		console.log("Build an url for neoip-casto");
 		console.log("");
-		console.log("-v|--verbose\tIncrease the verbose level (for debug).");
 		console.log("-s|--mdata_srv_uri\n\t\tSet url for the mdata_srv.");
 		console.log("-h|--help\tDisplay the inline help.");
 	}
