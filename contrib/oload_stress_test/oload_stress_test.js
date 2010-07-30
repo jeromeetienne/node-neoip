@@ -27,6 +27,9 @@ var range_len_base	= null;
 var range_len_rand	= null;
 var nb_concurent	= 1;
 
+var requests_max	= null;
+var requests_count	= 0;
+
 //////////////////////////////////////////////////////////////////////////////////
 //	parse cmdline								//
 //////////////////////////////////////////////////////////////////////////////////
@@ -34,27 +37,31 @@ var optind	= 2;
 for(;optind < process.argv.length; optind++){
 	var key	= process.argv[optind];
 	var val	= process.argv[optind+1];
-	//sys.puts("key="+key+" val="+val);
+	//console.log("key="+key+" val="+val);
 	if( key == "-c" || key == "--concurent" ){
 		nb_concurent	= parseInt(val);
 		optind		+= 1;
 	}else if( key == "-l" || key == "--req_length_base" ){
 		range_len_base	= strutils.string_to_size(val);
 		optind		+= 1;
-		//sys.puts("range_len_base="+range_len_base);
+		//console.log("range_len_base="+range_len_base);
 	}else if( key == "-r" || key == "--req_length_rand" ){
 		range_len_rand	= strutils.string_to_size(val);
 		optind		+= 1;
+	}else if( key == "-n" || key == "--nb_requests" ){
+		requests_max	= parseInt(val);
+		optind		+= 1;
 	}else if( key == "-h" || key == "--help" ){
-		sys.puts("usage: oload_stress_test [-c ncnx] [-l nbytes] [-r nbytes] URL [filename]");
-		sys.puts(" - If <filename> is present, an accuracy test is performed. AKA data are loaded from");
-		sys.puts("   the reference file and from the <URL> and both are checked to be equal.");
-		sys.puts(" - If <filename> is not present, a stress test is performed. AKA data are loaded from");
-		sys.puts("   the url as fast as possible.");
-		sys.puts("");
-		sys.puts("-c|--concurent ncnx\t\tDetermine the number of concurent connections during the tests.");
-		sys.puts("-l|--req_length_base nbytes\tThe base length of the request to make");
-		sys.puts("-r|--req_length_rand nbytes\tThe randomized length of the request to make");
+		console.log("usage: oload_stress_test [-c ncnx] [-l nbytes] [-r nbytes] [-n nreq] URL [filename]");
+		console.log(" - If <filename> is present, an accuracy test is performed. AKA data are loaded from");
+		console.log("   the reference file and from the <URL> and both are checked to be equal.");
+		console.log(" - If <filename> is not present, a stress test is performed. AKA data are loaded from");
+		console.log("   the url as fast as possible.");
+		console.log("");
+		console.log("-n|--nb_requests num\t\tDetermine the number of requests to do before stopping.");
+		console.log("-c|--concurent ncnx\t\tDetermine the number of concurent connections during the tests.");
+		console.log("-l|--req_length_base nbytes\tThe base length of the request to make");
+		console.log("-r|--req_length_rand nbytes\tThe randomized length of the request to make");
 		process.exit(0);
 	}else{
 		// if the option doesnt exist, consider it is the first non-option parameters
@@ -81,22 +88,29 @@ function do_test_accuracy()
 	range_len_rand	= Math.min(range_len_rand, range_len_base);
 
 	var cmp_digest_multiple	= function(){
+		// count this request, and exist 
+		requests_count	+= 1;
+		if( requests_max && requests_max < requests_count ){
+			console.log("All "+requests_max+" requests done.")
+			process.exit(0);
+		}
+		// compute the range to request
 		var range_len	= range_len_base - range_len_rand + Math.floor(Math.random()*range_len_rand*2);
 		var range_beg	= Math.floor(Math.random()*(filesize - range_len));
-	
+		// do the request	
 		cmp_digest(url, ref_fname, range_beg, range_len, function(err, succeed){
 			if( succeed )	sys.print(".");
-			else		sys.puts("accuracy: beg="+range_beg+" len="+range_len+" succeed="+succeed);
+			else		console.log("accuracy: beg="+range_beg+" len="+range_len+" succeed="+succeed);
 			cmp_digest_multiple();
 		})
 	}
 	
 	// display informations headers
-	sys.log("Check accuracy between url "+url);
-	sys.log("and file "+ ref_fname);
-	sys.log("Total content length "+filesize+"-bytes");
-	sys.log("using "+nb_concurent+" concurent requests");
-	sys.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
+	console.log("Check accuracy between url "+url);
+	console.log("and file "+ ref_fname);
+	console.log("Total content length "+filesize+"-bytes");
+	console.log("using "+nb_concurent+" concurent requests");
+	console.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
 	
 	for(var i = 0; i < nb_concurent; i++ ){
 		cmp_digest_multiple();
@@ -110,19 +124,26 @@ function do_test_accuracy()
 function do_test_stress()
 {
 	var http_request_multiple	= function(){
+		// count this request, and exist 
+		requests_count	+= 1;
+		if( requests_max && requests_max < requests_count ){
+			console.log("All "+requests_max+" requests done.")
+			process.exit(0);
+		}
+		// compute the range to request
 		var range_len	= range_len_base - range_len_rand + Math.floor(Math.random()*range_len_rand*2);
 		var range_beg	= Math.floor(Math.random()*(filesize - range_len));
-	
+		// do the request
 		http_get(url, range_beg, range_len, function(error, data){
-			//sys.puts("stress: beg="+range_beg+" len="+range_len+" error="+error);
+			//console.log("stress: beg="+range_beg+" len="+range_len+" error="+error);
 			if( error === null )	sys.print(".");
-			else			sys.log("beg="+range_beg+" len="+range_len+" error="+error);
+			else			console.log("beg="+range_beg+" len="+range_len+" error="+error);
 			http_request_multiple();
 		})
 	}
 	
 	var callback	= function(error, headers){
-		//sys.puts('HEADERS: ' + sys.inspect(headers));
+		//console.log('HEADERS: ' + sys.inspect(headers));
 		filesize	= parseInt(headers['content-length'], 10);
 		// set default range_len_base/range_len_rand
 		range_len_base	= range_len_base || Math.floor(filesize / 20);
@@ -132,10 +153,10 @@ function do_test_stress()
 		range_len_rand	= Math.min(range_len_rand, range_len_base);
 
 		// display informations headers
-		sys.log("Stress server at url "+url);
-		sys.log("Total content length "+filesize+"-bytes");
-		sys.log("using "+nb_concurent+" concurent requests");
-		sys.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
+		console.log("Stress server at url "+url);
+		console.log("Total content length "+filesize+"-bytes");
+		console.log("using "+nb_concurent+" concurent requests");
+		console.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
 	
 		for(var i = 0; i < nb_concurent; i++ ){
 			http_request_multiple();
