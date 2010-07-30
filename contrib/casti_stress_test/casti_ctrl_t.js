@@ -2,6 +2,7 @@
 
 var neoip_rpc	= require('./neoip_rpc_node');
 var sys		= require('sys');
+var underscore	= require('../vendor/underscore/underscore')._; underscore.noConflict();
 
 /**
 */
@@ -32,7 +33,7 @@ var casti_ctrl_t	= function(ctor_opts){
 		// stop the req_timer if needed
 		req_timer_stop();
 	}
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	//		misc							//
 	//////////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ var casti_ctrl_t	= function(ctor_opts){
 		// launch_rpc_call_release
 		rpc_call_release();
 	}
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	//		req_timer						//
 	//////////////////////////////////////////////////////////////////////////
@@ -90,11 +91,11 @@ var casti_ctrl_t	= function(ctor_opts){
 				if(returned_val.length > 0){
 				// mark this cast as "published"
 					cast_privhash	= returned_val;
-					event_cb("ispublished", {cast_privhash: returned_val});			
+					notify_event("ispublished", {cast_privhash: returned_val});			
 				}else{
 					// mark this cast as "not published"
 					cast_privhash	= null;
-					event_cb("nopublished", null);
+					notify_event("nopublished", null);
 				}
 			},
 			failure_cb	: function(fault){
@@ -102,7 +103,7 @@ var casti_ctrl_t	= function(ctor_opts){
 				cast_privhash	= null;
 				if( verbose )	console.log("failure: "+require('sys').inspect(fault));
 				rpc_call_destroy();
-				event_cb("rpc_error", null);
+				notify_event("rpc_error", null);
 			}
 		});
 	}
@@ -121,12 +122,12 @@ var casti_ctrl_t	= function(ctor_opts){
 			method_args	: [co.mdata_srv_uri, co.cast_name, co.cast_privtext],
 			success_cb	: function(returned_val){
 				rpc_call_destroy();
-				event_cb("released", null);
+				notify_event("released", null);
 			},
 			failure_cb	: function(fault){
 				if( verbose )	console.log("failure: "+require('sys').inspect(fault));
 				rpc_call_destroy();
-				event_cb("rpc_error", null);
+				notify_event("rpc_error", null);
 			}
 		});	
 	}
@@ -134,6 +135,23 @@ var casti_ctrl_t	= function(ctor_opts){
 		if( rpc_call !== null )	rpc_call.destroy();
 		rpc_call	= null;
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//		notify_event						//
+	//////////////////////////////////////////////////////////////////////////
+	var last_event_type	= null;
+	var last_event_data	= null;
+	var notify_event	= function(event_type, event_data){
+		// return if current event is equal to last event
+		if( event_type == last_event_type && underscore.isEqual(event_data, last_event_data) )
+			return;
+		// backup current event_type/event_data
+		last_event_data	= event_data;
+		last_event_type	= event_type;
+		// do notify the event_cb
+		event_cb(event_type, event_data);
+	}
+
 
 	//////////////////////////////////////////////////////////////////////////
 	//		run initialisation					//
@@ -224,7 +242,7 @@ if( process.argv[1] == __filename ){
 	
 	if(false){
 		// example of cmdline
-		// node casti_ctrl_t2.js --call_url http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js -o mdata_srv_uri http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi -o cast_name superstream -o cast_privtext supersecret -o scasti_uri http://127.0.0.1:8124 -o scasti_mod raw -o http_peersrc_uri '' -o web2srv_str 'dummyweb2serv_str' -v 
+		// node casti_ctrl_t.js --call_url http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js -o mdata_srv_uri http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi -o cast_name superstream -o cast_privtext supersecret -o scasti_uri http://127.0.0.1:8124 -o scasti_mod raw -o http_peersrc_uri '' -o web2srv_str 'dummyweb2serv_str' -v 
 		cmdline_opts.call_url	= "http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js";
 		cmdline_opts.casti_opts	= {
 			mdata_srv_uri	: "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi",
