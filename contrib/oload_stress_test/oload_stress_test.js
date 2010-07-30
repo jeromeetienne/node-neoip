@@ -26,8 +26,9 @@ var strutils	= require('../vendor/node-helpers/strutils');
 var range_len_base	= null;
 var range_len_rand	= null;
 var nb_concurent	= 1;
-
 var requests_max	= null;
+var verbose		= 0;
+
 var requests_count	= 0;
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -106,11 +107,14 @@ function do_test_accuracy()
 	}
 	
 	// display informations headers
-	console.log("Check accuracy between url "+url);
-	console.log("and file "+ ref_fname);
-	console.log("Total content length "+filesize+"-bytes");
-	console.log("using "+nb_concurent+" concurent requests");
-	console.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
+	if( verbose ){
+		console.log("Check accuracy between url "+url);
+		console.log("and file "+ ref_fname);
+		console.log("Total content length "+filesize+"-bytes");
+		console.log("using "+nb_concurent+" concurent requests");
+		console.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes.");
+		console.log("It will perform "+(requests_max?requests_max:"an unlimited number of")+" requests.");
+	}
 	
 	for(var i = 0; i < nb_concurent; i++ ){
 		cmp_digest_multiple();
@@ -153,10 +157,13 @@ function do_test_stress()
 		range_len_rand	= Math.min(range_len_rand, range_len_base);
 
 		// display informations headers
-		console.log("Stress server at url "+url);
-		console.log("Total content length "+filesize+"-bytes");
-		console.log("using "+nb_concurent+" concurent requests");
-		console.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes");
+		if( verbose ){
+			console.log("Stress server at url "+url);
+			console.log("Total content length "+filesize+"-bytes");
+			console.log("using "+nb_concurent+" concurent requests");
+			console.log("of "+range_len_base+"-bytes +/- "+range_len_rand+"-bytes.");
+			console.log("It will perform "+(requests_max?requests_max:"an unlimited number of")+" requests.");
+		}
 	
 		for(var i = 0; i < nb_concurent; i++ ){
 			http_request_multiple();
