@@ -4,3 +4,6 @@
 [submodule "contrib/vendor/node-helpers"]
 	path = contrib/vendor/node-helpers
 	url = git@github.com:jeromeetienne/node-helpers.git
+[submodule "contrib/vendor/underscore"]
+	path = contrib/vendor/underscore
+	url = http://github.com/documentcloud/underscore.git
