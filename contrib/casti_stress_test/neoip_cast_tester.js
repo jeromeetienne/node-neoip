@@ -1,17 +1,38 @@
 #!/usr/bin/env node
-// - BUG: neoip-casti to never timeout a swarm
-// - BUG: kinda casti should publish much faster than that
-// - BUG: publication seems to fails if there are too many casti are the same time
+// - fix event and display in those .js
+//   - clean the code + doc at least inline
+// - casti core dump with casti_ctrl_t with short period and > 3 stream
+//   - this one 'disapeared'.... no good
+//   - maybe because now the dns resolution is much faster... so the race no more happen
+// - FIXED BUG: publication seems to fails if there are too many casti are the same time
+//   - the issue is in neoip do publish ? or in the server ?
+//   - i think it may be the server... because it is related to the number of swarm
+//   - so it is a collision somewhere
+//   - TODO add logs in dopublish, look at them to see if anything seems fishy
+//     - change the timer for retry yo see if it fix anything
+//   - TODO how to see if there is a trouble with the server
+//     - current server is in php with fcgi. so hard to debug (require apache reload
+//       at each modification)
+//     - write a tester of this protocol in nodejs ? is there a xmlrpc in node
+//   - UPDATE: tracked it down to dns resolution.... if no dns resolution is done
+//     in the mdata_echo_srv, all is cool, event at 100 streams
+//   - UPDATE: this was a bug in asyncexe, used by host2ip_fork. fixed now
+// - FIXED BUG: neoip-casti to never timeout a swarm
+// - FIXED BUG: kinda casti should publish much faster than that
+//   - find out why it is so slow... log... try to figure out what is going on
+//   - is there a timeout ?
+//   - see if neoip_bt_scasti_mod_raw_profile.cpp can publish imediatly...
+//   - fixed
 
 var casti_ctrl_t	= require('./casti_ctrl_t');
 var node_chargen	= require('../vendor/node-chargen/node-chargen');
-var casto_url_builder	= require('./casto_url_builder');
+var casto_url_builder	= require('./casto_url_builder'); 
 var casto_testclient_t	= require('./casto_testclient_t');
 
 
-// TODO make that tunable from cmdline
+// tunable from cmdline
 var n_casti		= 1;
-var n_casto		= 20;
+var n_casto		= 3;
 var casto_max_recved	= 20*1024;
 var verbose		= 0;
 
@@ -41,26 +62,33 @@ var chargen_running	= function(){
 var casti_ctrls	= []
 var casti_ctrls_start	= function(succeed_cb, failure_cb){
 	for(var i = 0; i < n_casti; i++){
-		// launch the casti_ctrl_t
-		var casti_ctrl	= casti_ctrl_t.create({
-			call_url	: "http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js",
-			casti_opts	: {
-				mdata_srv_uri	: "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi",
-				cast_name	: "superstream"+i,
-				cast_privtext	: "supersecret"+i,
-				scasti_uri	: "http://127.0.0.1:8124",
-				scasti_mod	: "raw",
-				http_peersrc_uri: "",
-				web2srv_str	: "dummyuserdata"
-			},
-			event_cb	: function(event_type, event_data){
-				console.log("event_cb: type="+event_type+" data="+require('sys').inspect(event_data));
-				console.log("all published ? "+casti_ctrls_published());
-				if( casti_ctrls_published() )	succeed_cb();
-			}
-		});
-		// add it to casto_testclients
-		casti_ctrls.push(casti_ctrl);
+		(function(){
+			var casti_idx	= i;
+			// launch the casti_ctrl_t
+			var casti_ctrl	= casti_ctrl_t.create({
+				call_url	: "http://127.0.0.1:4570/neoip_casti_ctrl_wpage_jsrest.js",
+				casti_opts	: {
+					mdata_srv_uri	: "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi",
+					cast_name	: "superstream"+i,
+					cast_privtext	: "supersecret"+i,
+					scasti_uri	: "http://127.0.0.1:8124",
+					scasti_mod	: "raw",
+					http_peersrc_uri: "",
+					web2srv_str	: "dummyuserdata"
+				},
+				event_cb	: function(event_type, event_data){
+					//console.log("event_cb: type="+event_type+" data="+require('sys').inspect(event_data));
+					//console.log("casti_idx="+casti_idx);
+					//console.log("all published ? "+casti_ctrls_published());
+					if( event_type == "ispublished" ){
+						if( verbose )	console.log("casti_ctrl "+casti_idx+" published")
+					}
+					if( casti_ctrls_published() )	succeed_cb();
+				}
+			});
+			// add it to casto_testclients
+			casti_ctrls.push(casti_ctrl);
+		})();
 	}
 }
 var casti_ctrls_stop	= function(){
@@ -86,38 +114,37 @@ var casto_testclients	= []
 var casto_testclients_start	= function(succeed_cb, failure_cb){
 	for(var i = 0; i < n_casti; i++){
 		for(var j = 0; j < n_casto; j++){
-			var casto_idx	= i*n_casto + j;
-			// build the stream_url
-			var stream_url		= casto_url_builder.create({
-				base_url	: "http://127.0.0.1:4560",
-				cast_name	: "superstream"+i,
-				cast_privhash	: casti_ctrls[i].cast_privhash()
-			});
-			if( verbose > 1 )	console.log("stream_url="+stream_url);
-		// TODO this closure stuff is bad
-		(function(casto_idx){
-			// launch the casti_testclient_t
-			var casto_testclient	= casto_testclient_t.create({
-				stream_url	: stream_url,
-				max_recved_len	: casto_max_recved,
-				event_cb	: function(event_type, event_data){
-					console.log("event_type="+event_type+" event_data="+event_data);
-					if( event_type == "recved_size" ){
-						var nb_unit	= event_data;
-						for(var i = 0; i < nb_unit; i++){
-							require("sys").print('.');
+			(function(){ // TODO this closure stuff is bad
+				var casto_idx	= i*n_casto + j;
+				// build the stream_url
+				var stream_url		= casto_url_builder.create({
+					base_url	: "http://127.0.0.1:4560",
+					cast_name	: "superstream"+i,
+					cast_privhash	: casti_ctrls[i].cast_privhash()
+				});
+				if( verbose > 2 )	console.log("stream_url="+stream_url);
+				// launch the casti_testclient_t
+				var casto_testclient	= casto_testclient_t.create({
+					stream_url	: stream_url,
+					max_recved_len	: casto_max_recved,
+					event_cb	: function(event_type, event_data){
+						//console.log("casto event_type="+event_type+" event_data="+event_data);
+						if( event_type == "cnx_begin" ){
+							if( verbose )	console.log("casto_testclient "+casto_idx+" connected");
+						}else if(event_type == "error"){
+							console.log("casto "+casto_idx+" event_type="+event_type+" event_data="+event_data);
+							process.exit();
+						}else if(event_type == "recved_len_maxed"){
+							if( verbose )	console.log('casto testclient '+casto_idx+' is done');
+							casto_testclients[casto_idx].destroy();
+							casto_testclients[casto_idx]	= null;
+							if(!casto_testclients_running())	succeed_cb();
 						}
-					}else if(event_type == "recved_len_maxed"){
-						console.log('casto testclient '+casto_idx+' is done');
-						casto_testclients[casto_idx].destroy();
-						casto_testclients[casto_idx]	= null;
-						if(!casto_testclients_running())	succeed_cb();
 					}
-				}
-			});
-			// add it to casto_testclients
-			casto_testclients[casto_idx]	= casto_testclient;
-		})(casto_idx);
+				});
+				// add it to casto_testclients
+				casto_testclients[casto_idx]	= casto_testclient;
+			})();
 		}
 	}
 }
@@ -138,24 +165,44 @@ var casto_testclients_running	= function(){
 	return false
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+//		main()								//
+//////////////////////////////////////////////////////////////////////////////////
 var main	= function(){
+	// TODO put that in cmdline
+	var run_chargen	= true;
+	var run_casti	= true;
+	var run_casto	= true;
+	
 	var stop_all	= function(){
 		casto_testclients_stop();
 		casti_ctrls_stop();
 		chargen_stop();
 	}
 	
-	console.log("node-chargen starting (will be used as stream original source)");
-	chargen_start();
-	console.log("node-chargen started");
+	if(run_chargen){
+		console.log("node-chargen starting (will be used as stream original source)");
+		chargen_start();
+		console.log("node-chargen started");
+	}else{
+		console.log("node-chargen not started");
+	}
 	
-	console.log("casti_ctrl starting: "+n_casti+" publishing may take a while");
-	casti_ctrls_start(function(){
-		if( chargen.nb_clients() == n_casti ){			
-			if(!casto_testclients_running()){
-				console.log("casti_ctrl started: all casti_ctrl published ("+n_casti+" of them)");
-				console.log("node-chargen server got as many connection as casti. all is ok");
-				console.log("casto_testclient starting: ("+n_casti*n_casto+" of them)");
+	if( run_casti ){
+		console.log("casti_ctrl starting: "+n_casti+" publishing may take a while");
+		casti_ctrls_start(function(){
+			console.log("casti_ctrl started: all casti_ctrl published ("+n_casti+" of them)");
+			if( run_chargen ){
+				if( chargen.nb_clients() == n_casti ){			
+					console.log("node-chargen server got as many connection as casti. all is ok");
+				}else{
+					console.log("ERROR: node-chargen server has "+chargen.nb_clients()+" and should have "+n_casti);
+					process.exit();					
+				}
+			}
+			if( run_casto && !casto_testclients_running() ){
+				console.log("casto_testclient starting: ("+n_casti*n_casto+" of them. "+n_casto+" on each stream)");
 				casto_testclients_start(function(){
 					console.log("casto_testclients suceed!");
 					stop_all();
@@ -164,21 +211,19 @@ var main	= function(){
 					process.exit();
 				});
 			}
-		}else{
-			console.log("ERROR: node-chargen server has "+chargen.nb_clients()+" and should have "+n_casti);
+		}, function(){
+			console.log("ERROR: casti_ctrls failed!");
 			process.exit();
-		}
-	}, function(){
-		console.log("ERROR: casti_ctrls failed!");
-		process.exit();
-	});
+		});
+	}
 	
-	// trap SIGINT - first = release(), second normal behavior
+	// trap SIGINT 
 	process.addListener('SIGINT', function(){
 		console.log("Received sigint, start releasing the stream");
 		casto_testclients_stop();
 		casti_ctrls_stop();
 		chargen_stop();
+		// remove handler - so first = release(), second normal behavior 
 		process.removeListener('SIGINT', arguments.callee);
 	});
 }
