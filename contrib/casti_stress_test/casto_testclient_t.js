@@ -45,7 +45,7 @@ var casto_testclient_t	= function(ctor_opts){
 	var event_cb		= ctor_opts.event_cb		|| function(event_type, event_data){};
 	var notify_unit		= ctor_opts.notify_unit		|| 1024;
 	var verbose		= ctor_opts.verbose		|| 0;
-	var idle_timer_delay	= ctor_opts.idle_timer_delay	|| 1*1000;
+	var idle_timer_delay	= ctor_opts.idle_timer_delay	|| 20*1000;
 	var max_recved_len	= ctor_opts.max_recved_len	|| null;
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ var casto_testclient_t	= function(ctor_opts){
 	}
 	var idle_timer_cb	= function(){
 		if( verbose )	console.log("idle timer expired. next in "+idle_timer_delay+"-msec");
-		event_cb("idle_timeout", null);
+		event_cb("error", "idle timeout after "+idle_timer_delay+"-msec");
 	}
 
 	//////////////////////////////////////////////////////////////////////////
