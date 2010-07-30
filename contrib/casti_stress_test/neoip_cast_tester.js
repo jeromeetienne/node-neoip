@@ -190,9 +190,9 @@ var main	= function(){
 	}
 	
 	if( run_casti ){
-		console.log("casti_ctrl starting: "+n_casti+" publishing may take a while");
+		console.log("casti_ctrl starting: publishing "+n_casti+" streams. May take a while");
 		casti_ctrls_start(function(){
-			console.log("casti_ctrl started: all casti_ctrl published ("+n_casti+" of them)");
+			console.log("casti_ctrl started: all streams published. ("+n_casti+" of them)");
 			if( run_chargen ){
 				if( chargen.nb_clients() == n_casti ){			
 					console.log("node-chargen server got as many connection as casti. all is ok");
@@ -204,7 +204,7 @@ var main	= function(){
 			if( run_casto && !casto_testclients_running() ){
 				console.log("casto_testclient starting: ("+n_casti*n_casto+" of them. "+n_casto+" on each stream)");
 				casto_testclients_start(function(){
-					console.log("casto_testclients suceed!");
+					console.log("casto_testclients succeed!");
 					stop_all();
 				}, function(){
 					console.log("ERROR: casto_testclients failed!");
