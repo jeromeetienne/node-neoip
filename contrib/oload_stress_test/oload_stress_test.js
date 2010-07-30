@@ -9,6 +9,10 @@
  *   - just hammer the server with random request
  * Usage Example:
  * ./oload_stress_test.js -l 30k -r 5k `neoip-url http://localhost/~jerome/Videos/Fearless.mp4` ~/Videos/Fearless.mp4
+ *
+ * NOTE:
+ * - for accuracy, it would be better to get 2 url (instead of an url and a path)
+ *   - more regular and more flexible. would allow remote content
 */
 
 
