@@ -123,7 +123,7 @@ var casto_testclient_t	= function(ctor_opts){
 				// update notified_len
 				notified_len		= recved_len;
 				// notify the caller
-				if( recved_len >= max_recved_len )	event_cb("recved_len_maxed", null);
+				if( max_recved_len && recved_len >= max_recved_len )	event_cb("recved_len_maxed", null);
 			});
 			client_res.on('end', function(){
 				// log the event
