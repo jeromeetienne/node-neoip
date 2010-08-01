@@ -21,7 +21,6 @@ var sys		= require('sys');
 var fs		= require('fs');
 // local dependancies
 var cmp_digest	= require('./test_accuracy').cmp_digest;
-var http_get	= require('../vendor/node-helpers/ez_http').http_get;
 var ezhttp	= require('../vendor/node-helpers/ez_http');
 var ttyc	= require('../vendor/node-helpers/ez_tty_color');
 var strutils	= require('../vendor/node-helpers/strutils');
@@ -33,6 +32,7 @@ var nb_concurent	= 1;
 var requests_max	= null;
 var verbose		= 0;
 
+// class local
 var requests_count	= 0;
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +56,8 @@ for(;optind < process.argv.length; optind++){
 	}else if( key == "-n" || key == "--nb_requests" ){
 		requests_max	= parseInt(val);
 		optind		+= 1;
+	}else if( key == '-v' || key == "--verbose" ){
+		verbose	+= 1;
 	}else if( key == "-h" || key == "--help" ){
 		console.log("usage: oload_stress_test [-c ncnx] [-l nbytes] [-r nbytes] [-n nreq] URL [filename]");
 		console.log(" - If <filename> is present, an accuracy test is performed. AKA data are loaded from");
@@ -67,6 +69,7 @@ for(;optind < process.argv.length; optind++){
 		console.log("-c|--concurent ncnx\t\tDetermine the number of concurent connections during the tests.");
 		console.log("-l|--req_length_base nbytes\tThe base length of the request to make");
 		console.log("-r|--req_length_rand nbytes\tThe randomized length of the request to make");
+		console.log("-v|--verbose\t\t\tIncrease the verbose level (for debug).");		
 		process.exit(0);
 	}else{
 		// if the option doesnt exist, consider it is the first non-option parameters
@@ -102,7 +105,7 @@ function do_test_accuracy()
 		// compute the range to request
 		var range_len	= range_len_base - range_len_rand + Math.floor(Math.random()*range_len_rand*2);
 		var range_beg	= Math.floor(Math.random()*(filesize - range_len));
-		// do the request	
+		// do the request
 		cmp_digest(url, ref_fname, range_beg, range_len, function(err, succeed){
 			if( succeed )	sys.print(".");
 			else		console.log("accuracy: beg="+range_beg+" len="+range_len+" succeed="+succeed);
@@ -131,6 +134,7 @@ function do_test_accuracy()
 
 function do_test_stress()
 {
+	var filesize	= null;
 	var http_request_multiple	= function(){
 		// count this request, and exist 
 		requests_count	+= 1;
@@ -142,7 +146,7 @@ function do_test_stress()
 		var range_len	= range_len_base - range_len_rand + Math.floor(Math.random()*range_len_rand*2);
 		var range_beg	= Math.floor(Math.random()*(filesize - range_len));
 		// do the request
-		http_get(url, range_beg, range_len, function(error, data){
+		ezhttp.http_get(url, range_beg, range_len, function(error, data){
 			//console.log("stress: beg="+range_beg+" len="+range_len+" error="+error);
 			if( error === null )	sys.print(".");
 			else			console.log("beg="+range_beg+" len="+range_len+" error="+error);
@@ -151,8 +155,13 @@ function do_test_stress()
 	}
 	
 	var callback	= function(error, headers){
+		// handle error
+		if( error ){
+			console.log("Cant find url due to "+error);
+			return;
+		}
 		//console.log('HEADERS: ' + sys.inspect(headers));
-		filesize	= parseInt(headers['content-length'], 10);
+		filesize	= parseInt(headers['content-length']);
 		// set default range_len_base/range_len_rand
 		range_len_base	= range_len_base || Math.floor(filesize / 20);
 		range_len_rand	= range_len_rand || Math.floor(range_len_base / 2);
@@ -180,6 +189,6 @@ function do_test_stress()
 //////////////////////////////////////////////////////////////////////////////////
 //	main program								//
 //////////////////////////////////////////////////////////////////////////////////
-if( ref_fname !== undefined )	do_test_accuracy();
-else				do_test_stress();
+if( ref_fname === undefined )	do_test_stress();
+else				do_test_accuracy();
 

@@ -6,13 +6,13 @@ var fs		= require('fs');
 
 var ez_output	= require('../vendor/node-helpers/ez_output');
 var ez_fileutils= require('../vendor/node-helpers/ez_fileutils');
-var http_get	= require('../vendor/node-helpers/ez_http').http_get;
+var ezhttp	= require('../vendor/node-helpers/ez_http');
 
 /**
  * cpu digest http
 */
 var cpu_digest_http	= function(url_str, range_beg, range_len, completed_cb){
-	http_get(url_str, range_beg, range_len, function(error, data){
+	ezhttp.http_get(url_str, range_beg, range_len, function(error, data){
 		//console.log("stress: beg="+range_beg+" len="+range_len+" error="+error);
 		if( error !== null ){
 			completed_cb(error, null);
@@ -30,7 +30,7 @@ var cpu_digest_file	= function(filename, range_beg, range_len, completed_cb){
 	var hash	= crypto.createHash('md5');
 	var read_len	= 0;
 	var chunk_max	= 512*1024;
-	
+		
 	var callback	= function(err, data){
 		if( err !== null ){
 			completed_cb(err, null);
