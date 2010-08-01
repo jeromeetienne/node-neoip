@@ -34,7 +34,7 @@ var casto_testclient_t	= require('./casto_testclient_t');
 // tunable from cmdline
 var n_casti		= 1;
 var n_casto		= 3;
-var casto_max_recved	= 20*1024;
+var casto_max_recved	= null;
 var verbose		= 0;
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +83,8 @@ var casti_ctrls_start	= function(succeed_cb, failure_cb){
 					//console.log("all published ? "+casti_ctrls_published());
 					if( event_type == "ispublished" ){
 						if( verbose )	console.log("casti_ctrl "+casti_idx+" published")
+					}else if( event_type == "rpc_error" ){
+						failure_cb("rpc_error");
 					}
 					if( casti_ctrls_published() )	succeed_cb();
 				}
@@ -134,7 +136,7 @@ var casto_testclients_start	= function(succeed_cb, failure_cb){
 							if( verbose )	console.log("casto_testclient "+casto_idx+" connected");
 						}else if(event_type == "error"){
 							console.log("casto "+casto_idx+" event_type="+event_type+" event_data="+event_data);
-							process.exit();
+							process.exit(-1);
 						}else if(event_type == "recved_len_maxed"){
 							if( verbose )	console.log('casto testclient '+casto_idx+' is done');
 							casto_testclients[casto_idx].destroy();
@@ -213,7 +215,7 @@ var main	= function(){
 				});
 			}
 		}, function(){
-			console.log("ERROR: casti_ctrls failed!");
+			console.log("ERROR: casti_ctrls "+tty_color.fg_red+"failed"+tty_color.all_off+"!");
 			process.exit();
 		});
 	}
@@ -265,8 +267,8 @@ if( process.argv[1] == __filename ){
 		}else if( key == '-o' || key == "--n_casto" ){
 			cmdline_opts.n_casto	= parseInt(val);
 			optind		+= 1;
-		}else if( key == '-l' || key == "--casti_max_recved" ){
-			cmdline_opts.casti_max_recved	= parseInt(val);
+		}else if( key == '-l' || key == "--casto_max_recved" ){
+			cmdline_opts.casto_max_recved	= parseInt(val);
 			optind		+= 1;			
 		}else if( key == '-v' || key == "--verbose" ){
 			cmdline_opts.verbose	+= 1;
