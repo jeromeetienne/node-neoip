@@ -26,6 +26,7 @@
 
 var casti_ctrl_t	= require('./casti_ctrl_t');
 var node_chargen	= require('../vendor/node-chargen/node-chargen');
+var tty_color		= require('../vendor/node-helpers/ez_tty_color');
 var casto_url_builder	= require('./casto_url_builder'); 
 var casto_testclient_t	= require('./casto_testclient_t');
 
@@ -184,7 +185,7 @@ var main	= function(){
 	if(run_chargen){
 		console.log("node-chargen starting (will be used as stream original source)");
 		chargen_start();
-		console.log("node-chargen started");
+		console.log("node-chargen started: "+tty_color.fg_green+"OK"+tty_color.all_off);
 	}else{
 		console.log("node-chargen not started");
 	}
@@ -192,19 +193,19 @@ var main	= function(){
 	if( run_casti ){
 		console.log("casti_ctrl starting: publishing "+n_casti+" streams. May take a while");
 		casti_ctrls_start(function(){
-			console.log("casti_ctrl started: all streams published. ("+n_casti+" of them)");
+			console.log("casti_ctrl started: "+tty_color.fg_green+"all streams published"+tty_color.all_off+". ("+n_casti+" of them)");
 			if( run_chargen ){
 				if( chargen.nb_clients() == n_casti ){			
-					console.log("node-chargen server got as many connection as casti. all is ok");
+					console.log("node-chargen server got as many connection as casti. all is "+tty_color.fg_green+"OK"+tty_color.all_off);
 				}else{
-					console.log("ERROR: node-chargen server has "+chargen.nb_clients()+" and should have "+n_casti);
+					console.log("ERROR: node-chargen server has "+tty_color.fg_green+chargen.nb_clients()+" and should have "+n_casti+tty_color.all_off);
 					process.exit();					
 				}
 			}
 			if( run_casto && !casto_testclients_running() ){
 				console.log("casto_testclient starting: ("+n_casti*n_casto+" of them. "+n_casto+" on each stream)");
 				casto_testclients_start(function(){
-					console.log("casto_testclients succeed!");
+					console.log("casto_testclients "+tty_color.fg_green+"succeed"+tty_color.all_off);
 					stop_all();
 				}, function(){
 					console.log("ERROR: casto_testclients failed!");
