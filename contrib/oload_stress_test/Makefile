@@ -1,7 +1,7 @@
 # raw makefile
 # - ease repeatitive operations
 
-CONTENT_URL:=$(shell node ../../neoip-url http://127.0.0.1/~jerome/Videos/Fearless.mp4)
+CONTENT_URL:=$(shell node ../../lib/oload_url_builder.js http://127.0.0.1/~jerome/Videos/Fearless.mp4)
 CONTENT_PATH:=~/Videos/Fearless.mp4
 
 all: test

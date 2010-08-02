@@ -24,11 +24,11 @@
 //   - see if neoip_bt_scasti_mod_raw_profile.cpp can publish imediatly...
 //   - fixed
 
-var casti_ctrl_t	= require('./casti_ctrl_t');
-var node_chargen	= require('../vendor/node-chargen/node-chargen');
-var tty_color		= require('../vendor/node-helpers/ez_tty_color');
-var casto_url_builder	= require('./casto_url_builder'); 
-var casto_testclient_t	= require('./casto_testclient_t');
+var casti_ctrl_t	= require('../../lib/casti_ctrl_t');
+var casto_url_builder	= require('../../lib/casto_url_builder'); 
+var casto_testclient_t	= require('../../lib/casto_testclient_t');
+var node_chargen	= require('../../vendor/node-chargen/node-chargen');
+var tty_color		= require('../../vendor/node-helpers/ez_tty_color');
 
 
 // tunable from cmdline
