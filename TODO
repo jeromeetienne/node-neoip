@@ -1,6 +1,5 @@
 Reorginize filter struct:
 -------------------------
-- rename neoip/ in lib/
 - put neoip-url executable in bin/
 - in contrib/
   - oload_stress_test
