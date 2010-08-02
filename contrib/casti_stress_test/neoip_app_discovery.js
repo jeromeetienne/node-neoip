@@ -5,19 +5,6 @@ var http	= require('http');
 var neoip_rpc	= require('./neoip_rpc_node');
 
 /**
- * Probe an application 
-*/
-var probe_app2	= function(apps_suffix, host, port, success_cb, failure_cb){
-	neoip_rpc.call.create({
-		call_url	: "http://"+host+":"+port+"/neoip_"+apps_suffix+"_appdetect_jsrest.js",
-		method_name	: 'probe_apps',
-		method_args	: [],
-		success_cb	: success_cb,
-		failure_cb	: failure_cb
-	});
-};
-
-/**
  * Constant informations about applications
 */
 var app_infos	= {
