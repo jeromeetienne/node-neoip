@@ -1,0 +1,14 @@
+Source: neoip-utils
+Section: net
+Priority: extra
+Maintainer: Jerome Etienne <jerome.etienne@gmail.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.4
+Homepage: http://github.com/jeromeetienne/node-neoip
+
+Package: neoip-utils
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Command line utils for neoip
+ A bunch of utils to use neoip from the command line. It allows to easily
+ build url for static and streamed contents.

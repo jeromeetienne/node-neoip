@@ -3,56 +3,30 @@
 
 all:
 
-PKGNAME="neoip"
-VERSION="1.0.0"
+PKGNAME="neoip-utils"
+VERSION="0.5.0"
 
-DST_ROOT:=/
-DST_BIN	:=$(DESTDIR)/usr/bin
-DST_LIB	:=~/.node_libraries
-PWD 	:= $(shell pwd)
-SRC_DIR	:= $(shell pwd)/../node-neoip
+build:
+	echo "make build"
 
-################################################################################
-#	install/uninstall target
-################################################################################
+clean:
+	echo "make clean"
+	
+install: build
+	echo "make install"
 
-install: install_prod
+#################################################################################
+#		package handling						#
+#################################################################################
 
-install_dev:
-	ln -sf $(PWD) $(DST_LIB)/$(PKGNAME)-$(VERSION)
-	ln -sf $(DST_LIB)/$(PKGNAME)-$(VERSION) $(DST_LIB)/$(PKGNAME)
-	mkdir -p $(DST_BIN)
-	ln -sf $(PWD)/neoip-url $(DST_BIN)/neoip-url
+deb_src_build:
+	debuild -S -k'jerome etienne' -I.git
 
-install_prod:
-	mkdir -p $(DST_LIB)/$(PKGNAME)-$(VERSION)
-	cp -fr $(SRC_DIR)/* $(DST_LIB)/$(PKGNAME)-$(VERSION)/
-	mkdir -p $(DST_BIN)
-	ln -sf $(DST_LIB)/$(PKGNAME)-$(VERSION)/neoip-url $(DST_BIN)/neoip-url
+deb_bin_build:
+	debuild -i -us -uc -b
 
-uninstall:
-	rm -rf $(DST_LIB)/$(PKGNAME)-$(VERSION)
-	rm -f $(DST_BIN)/neoip-url
+deb_upd_changelog:
+	dch --newversion $(VERSION)~lucid1~ppa`date +%Y%m%d%H%M` --maintmaint --force-bad-version --distribution `lsb_release -c -s` Another build
 
-
-################################################################################
-# 	package handling with npm
-# - http://github.com/isaacs/npm
-# - npm is ultra beta. More an experiement than anything
-################################################################################
-pkg_publish:
-	sudo npm publish $(PWD)
-
-#############################################
-pkg_test_install:
-	sudo npm install .
-
-pkg_test_uninstall:
-	sudo npm uninstall .
-
-#############################################
-pkg_install:
-	sudo npm install neoip@latest
-
-pkg_uninstall:
-	sudo npm uninstall neoip
+ppa_upload: deb_src_build
+	dput -U ppa:jerome-etienne/neoip ../$(PKGNAME)_$(VERSION)~lucid1~ppa*_source.changes 
