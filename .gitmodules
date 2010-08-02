@@ -1,9 +1,9 @@
-[submodule "contrib/vendor/node-chargen"]
+[submodule "vendor/node-chargen"]
 	path = vendor/node-chargen
 	url = git@github.com:jeromeetienne/node-chargen.git
-[submodule "contrib/vendor/node-helpers"]
+[submodule "vendor/node-helpers"]
 	path = vendor/node-helpers
 	url = git@github.com:jeromeetienne/node-helpers.git
-[submodule "contrib/vendor/underscore"]
+[submodule "vendor/underscore"]
 	path = vendor/underscore
 	url = http://github.com/documentcloud/underscore.git
