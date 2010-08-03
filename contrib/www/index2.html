@@ -1,0 +1,25 @@
+<html>
+<body>
+<script src="jquery-1.4.2.js"></script>
+<script src="neoip_jsonp_call.js"></script>
+<script src="neoip_rpc_web.js"></script>
+
+<script>
+jQuery(function(){
+	var rpc_call	= new neoip.rpc_call({
+		call_url	: 'http://localhost:4550/neoip_oload_appdetect_jsrest.js',
+		method_name	: 'probe_apps',
+		success_cb	: function(returned_val){
+			console.log("succeed");	
+			console.dir(returned_val);
+		},
+		failure_cb	: function(reason){
+			console.log('failed');
+		}
+	});
+})
+</script>	
+	
+</body>
+</html>
+
