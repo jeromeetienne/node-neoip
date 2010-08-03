@@ -1,11 +1,30 @@
-Reorginize filter struct:
--------------------------
-- put neoip-url executable in bin/
-- in contrib/
-  - oload_stress_test
-  - www
-******************************
-
-- add some documentation in oload stress test
-- DONE put the ez_* files in their own repository node_helpers
-- DONE remove the prout.js in oload stress test
+***********************************************************
+TODO
+- contrib/
+  - casti test/oload test
+- make it installable
+- how to handle test and docs
+  - for exes, docs == man
+  - for class, docs == jsdoc
+- what about a class == exe, contain manpage in pod + test + cmdline
+  - this fit well the unicity issue
+  - make a source rather dirty tho
+***********************************************************
+NAMING:
+- big issue in naming
+- how to name executable
+  - neoip-detect to detect applications
+  - neoip-url to build url... how to distinguish from oload and casto ?
+    - if --stream is contained process.argv[] remove it and launch casto
+    - if --static, launch oload
+    - if none, launch oload
+- how to name files and class
+  - usually i use _t at the end of class. This make a clear diff between the naming
+    of the object and the naming of the class
+  - some use upper/lower char instead
+***********************************************************
+Web compatibility:
+- how to be compatible with web
+  - what need to be compatible ?
+  - oload_url_builder/casto_url_builder
+  - app detect
