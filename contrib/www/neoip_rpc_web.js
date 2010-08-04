@@ -39,7 +39,7 @@ neoip.rpc_call = function(ctor_opts){
 		for(var i = 0; i < method_args.length; i++){
 			url	+= "&arg"+i+"=" + escape(method_args[i]);
 		}
-		console.log("url="+url);
+		if( verbose > 1 )	console.log("url="+url);
 		// create the jsonp_call
 		client_call	= new neoip.jsonp_call({
 			url		: url,
@@ -55,7 +55,7 @@ neoip.rpc_call = function(ctor_opts){
 			},
 			failure_cb	: function(error){
 				// log to debug
-				console.log("failed due to "+error);
+				if( verbose )	console.log("failed due to "+error);
 				// notify the caller
 				failure_cb(error);
 			}
@@ -78,3 +78,9 @@ neoip.rpc_call = function(ctor_opts){
 		destroy	: dtor
 	}
 };
+
+/**
+ * Class method to create an object
+ * - thus avoid new operator
+*/
+neoip.rpc_call.create	= function(ctor_opts){	return new neoip.rpc_call(ctor_opts);	}
