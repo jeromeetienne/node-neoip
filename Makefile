@@ -6,7 +6,7 @@ all:
 PKGNAME="neoip-utils"
 VERSION="0.5.0"
 # work: get that dynamically
-SRC_DIR=/home/jerome/webwork/node-neoip
+SRC_DIR=$(shell /bin/pwd)
 DST_DIR_LIB=$(DESTDIR)/usr/share/neoip-utils
 DST_DIR_BIN=$(DESTDIR)/usr/bin
 
