@@ -1,5 +1,5 @@
-
-neoip	= {a:3}
+// declare namespace
+neoip	= neoip || {}
 
 require("./neoip_app_detect_web");
 

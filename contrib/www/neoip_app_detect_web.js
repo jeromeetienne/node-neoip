@@ -2,6 +2,7 @@
 //		Loader (ok with CommonJS and web browser)			//
 //////////////////////////////////////////////////////////////////////////////////
 (function() {	// begining of the global closure
+// declare global namespace
 neoip	= neoip || {}
 if( typeof(exports)==="object" && typeof(require)==="function" ){
 	neoip.rpc_call	= require("../../lib/neoip_rpc_node");
