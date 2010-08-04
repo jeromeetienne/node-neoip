@@ -5,15 +5,27 @@ all:
 
 PKGNAME="neoip-utils"
 VERSION="0.5.0"
+# work: get that dynamically
+SRC_DIR=/home/jerome/webwork/node-neoip
+DST_DIR_LIB=$(DESTDIR)/usr/share/neoip-utils
+DST_DIR_BIN=$(DESTDIR)/usr/bin
 
 build:
 	echo "make build"
 
 clean:
 	echo "make clean"
-	
+
 install: build
 	echo "make install"
+	install -d $(DST_DIR_LIB)
+	rsync -va --exclude debian --exclude .git $(SRC_DIR)/. $(DST_DIR_LIB)
+	install -d $(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/neoip-url $(DST_DIR_BIN)
+
+uninstall:
+	rm -rf $(DST_DIR_LIB)
+	rm -f $(DST_DIR_BIN)/neoip-url
 
 #################################################################################
 #		package handling						#
