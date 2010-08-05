@@ -2,4 +2,4 @@
 
 ROOTDIR=/home/jerome/webwork/node-neoip
 
-exec node $ROOTDIR/lib/neoip_app_detect.js $*
+exec node $ROOTDIR/lib/casto_url_builder.js $*

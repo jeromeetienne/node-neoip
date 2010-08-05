@@ -21,11 +21,15 @@ install: build
 	install -d $(DST_DIR_LIB)
 	rsync -va --exclude debian --exclude .git $(SRC_DIR)/. $(DST_DIR_LIB)
 	install -d $(DST_DIR_BIN)
-	cp $(DST_DIR_LIB)/bin/neoip-url $(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/neoip-url-static	$(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/neoip-url-stream	$(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/neoip-detect	$(DST_DIR_BIN)
 
 uninstall:
 	rm -rf $(DST_DIR_LIB)
-	rm -f $(DST_DIR_BIN)/neoip-url
+	rm -f $(DST_DIR_BIN)/neoip-url-static
+	rm -f $(DST_DIR_BIN)/neoip-url-stream
+	rm -f $(DST_DIR_BIN)/neoip-detect
 
 #################################################################################
 #		package handling						#
