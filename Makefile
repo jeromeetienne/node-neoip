@@ -5,7 +5,6 @@ all:
 
 PKGNAME="neoip-utils"
 VERSION="0.6.0"
-# work: get that dynamically
 SRC_DIR=$(shell /bin/pwd)
 DST_DIR_LIB=$(DESTDIR)/usr/share/neoip-utils
 DST_DIR_BIN=$(DESTDIR)/usr/bin
@@ -14,6 +13,10 @@ DST_DIR_MAN=$(DESTDIR)/usr/share/man
 doc:
 	pod2man --section=1 --release=$(VERSION) lib/casto_url_builder.js > man/neoip-url-stream.1
 
+
+#################################################################################
+#		usual targets							#
+#################################################################################
 build: doc
 	echo "make build"
 
@@ -21,7 +24,6 @@ clean:
 	echo "make clean"
 
 install: build
-	echo "make install"
 	install -d $(DST_DIR_LIB)
 	rsync -va --exclude debian --exclude .git $(SRC_DIR)/. $(DST_DIR_LIB)
 	install -d $(DST_DIR_BIN)
