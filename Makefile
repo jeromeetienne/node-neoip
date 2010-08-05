@@ -35,7 +35,7 @@ deb_src_build:
 	debuild -S -k'jerome etienne' -I.git
 
 deb_bin_build:
-	debuild -i -us -uc -b
+	 
 
 deb_upd_changelog:
 	dch --newversion $(VERSION)~lucid1~ppa`date +%Y%m%d%H%M` --maintmaint --force-bad-version --distribution `lsb_release -c -s` Another build
