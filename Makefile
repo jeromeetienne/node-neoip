@@ -4,7 +4,7 @@
 all:
 
 PKGNAME="neoip-utils"
-VERSION="0.5.0"
+VERSION="0.6.0"
 # work: get that dynamically
 SRC_DIR=$(shell /bin/pwd)
 DST_DIR_LIB=$(DESTDIR)/usr/share/neoip-utils
@@ -32,17 +32,20 @@ uninstall:
 	rm -f $(DST_DIR_BIN)/neoip-detect
 
 #################################################################################
-#		package handling						#
+#		deb package handling						#
 #################################################################################
 
 deb_src_build:
 	debuild -S -k'jerome etienne' -I.git
 
 deb_bin_build:
-	debuild -i -us -uc -b
+	 
 
 deb_upd_changelog:
 	dch --newversion $(VERSION)~lucid1~ppa`date +%Y%m%d%H%M` --maintmaint --force-bad-version --distribution `lsb_release -c -s` Another build
 
-ppa_upload: deb_src_build
+deb_clean:
+	rm -f ../$(PKGNAME)_$(VERSION)~lucid1~ppa*
+
+ppa_upload: deb_clean deb_upd_changelog deb_src_build
 	dput -U ppa:jerome-etienne/neoip ../$(PKGNAME)_$(VERSION)~lucid1~ppa*_source.changes 
