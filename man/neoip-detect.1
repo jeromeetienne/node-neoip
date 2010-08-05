@@ -123,54 +123,63 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "CASTO_URL_BUILDER.JS 1"
-.TH CASTO_URL_BUILDER.JS 1 "2010-08-05" "0.6.0" "User Contributed Perl Documentation"
+.IX Title "NEOIP_APP_DETECT.JS 1"
+.TH NEOIP_APP_DETECT.JS 1 "2010-08-05" "0.6.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-neoip\-url\-stream \- build a url for neoip\-casto
+neoip\-detect \- Detect neoip applications
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-\&\fBneoip-url-stream\fR [\-s mdata_srv_uri] base_url cast_privhash cast_name
+\&\fBneoip-detect\fR  [options] [appname [output_type]]
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Build an url for neoip-casto. This url will point on a normal http stream.
-Thus the client may be any client which understand http, it doesnt have to modified
-to use this url.
-.IP "\fIbase_url\fR" 4
-.IX Item "base_url"
-The base_url is the neoip-casto base url. It is not autodetected.
-\&\s-1TODO\s0 make it autodetectable (likely with a neoip-appdetect applications
-or by simply make a dependancy in the code)
-.IP "\fIcast_privhash\fR" 4
-.IX Item "cast_privhash"
-This is the hash of the broadcast password (aka casti_privtext). This is used
-to ensure the http client got the permission to read the broadcast.
-.IP "\fIcast_name\fR" 4
-.IX Item "cast_name"
-cast_name is the name of the broadcast. This name is unique inside the \fImdata_srv_uri\fR.
+\&\fBneoip-detect\fR detect neoip-applications presence and related informations, like
+version or api's root_url.
+.IP "\fIappname\fR" 4
+.IX Item "appname"
+Valid appnames are in 'oload', 'casti', 'casto' and 'webpack'.
+It is optionnal and defaults to 'presence'.
+.IP "\fIoutput_type\fR" 4
+.IX Item "output_type"
+Determine the type of output to use. Valid output_type are : 'root_url', 'version' and 'presence'.
+It is optionnal and defaults to 'presence'.
+.Sp
+\&\fBNote\fR: if \fIappname\fR is 'webpack', the only valid type is 'presence'
+.RS 4
+.IP "\fIroot_url\fR" 4
+.IX Item "root_url"
+It will output in stdout the \s-1API\s0's root url for this application.
+.IP "\fIversion\fR" 4
+.IX Item "version"
+It will output in stdout version this application.
+.IP "\fIpresence\fR" 4
+.IX Item "presence"
+It will display a human readable message on stdout. This option is interesting
+mainly for its statuscode returned by the executable.
+.RE
+.RS 4
+.RE
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 The following options are available:
-.IP "\fB\-s|\-\-mdata_srv_uri\fR \fIurl\fR" 4
-.IX Item "-s|--mdata_srv_uri url"
-Use to set the url for the metadata server. This server got the metadata information
-about the broadcast. (\s-1OPTIONAL\s0)
+.IP "\fB\-v\fR" 4
+.IX Item "-v"
+Increase the verbose level. It may be used multiple times.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
-.IP "\fBbasic usage\fR" 4
-.IX Item "basic usage"
-$ neoip-url-stream http://localhost:4560 a761ce3a superstream
+.IP "\fBversion display\fR" 4
+.IX Item "version display"
+$ neoip-detect oload version
 .Sp
 This will display the following in stdout
 .Sp
-http://localhost:4560/a761ce3a/superstream
-.IP "\fBspecifying mdata_srv_uri\fR" 4
-.IX Item "specifying mdata_srv_uri"
-$ neoip-url-stream \-s http://example.com http://localhost:4560 a761ce3a superstream
+0.0.1
+.IP "\fBdetecting presence\fR" 4
+.IX Item "detecting presence"
+$ neoip-detect webpack && echo \*(L"detected\*(R" || echo \*(L"not detected\*(R"
 .Sp
-This will display the following in stdout
-.Sp
-http://localhost:4560/a761ce3a/superstream?mdata_srv_uri=http%3A//example.com
+This will display \fIdetected\fR in stdout if neoip-webpack is detected
+and \fInot detected\fR otherwise.

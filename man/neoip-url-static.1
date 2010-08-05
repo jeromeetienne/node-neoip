@@ -123,54 +123,64 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "CASTO_URL_BUILDER.JS 1"
-.TH CASTO_URL_BUILDER.JS 1 "2010-08-05" "0.6.0" "User Contributed Perl Documentation"
+.IX Title "OLOAD_URL_BUILDER.JS 1"
+.TH OLOAD_URL_BUILDER.JS 1 "2010-08-05" "0.6.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-neoip\-url\-stream \- build a url for neoip\-casto
+neoip\-url\-static \- Helps build url for neoip\-webpack
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-\&\fBneoip-url-stream\fR [\-s mdata_srv_uri] base_url cast_privhash cast_name
+\&\fBneoip-url-static\fR  [options] url
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Build an url for neoip-casto. This url will point on a normal http stream.
-Thus the client may be any client which understand http, it doesnt have to modified
-to use this url.
-.IP "\fIbase_url\fR" 4
-.IX Item "base_url"
-The base_url is the neoip-casto base url. It is not autodetected.
-\&\s-1TODO\s0 make it autodetectable (likely with a neoip-appdetect applications
-or by simply make a dependancy in the code)
-.IP "\fIcast_privhash\fR" 4
-.IX Item "cast_privhash"
-This is the hash of the broadcast password (aka casti_privtext). This is used
-to ensure the http client got the permission to read the broadcast.
-.IP "\fIcast_name\fR" 4
-.IX Item "cast_name"
-cast_name is the name of the broadcast. This name is unique inside the \fImdata_srv_uri\fR.
+\&\fBneoip-url-static\fR Discover neoip-webpack presence and generate the url for it. If
+not present, it fallbacks on the original url. The generated url is outputed on \s-1STDOUT\s0.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 The following options are available:
-.IP "\fB\-s|\-\-mdata_srv_uri\fR \fIurl\fR" 4
-.IX Item "-s|--mdata_srv_uri url"
-Use to set the url for the metadata server. This server got the metadata information
-about the broadcast. (\s-1OPTIONAL\s0)
+.IP "\fB\-\-outter_var KEY=VAL, \-o KEY=VAL\fR" 4
+.IX Item "--outter_var KEY=VAL, -o KEY=VAL"
+Set an outter_var.
+.IP "\fB\-\-minner_var KEY=VAL, \-o KEY=VAL\fR" 4
+.IX Item "--minner_var KEY=VAL, -o KEY=VAL"
+Set an minner_var.
+.IP "\fB\-\-dupuri \s-1URI\s0, \-d \s-1URI\s0\fR" 4
+.IX Item "--dupuri URI, -d URI"
+Set this \s-1URI\s0 as a duplicate uri from the main uri. More just
+an alias for 'outter_var/dupuri', as it handle gory details of
+dupuri index for you.
+.IP "\fB\-\-mode \s-1STR\s0, \-m \s-1STR\s0\fR" 4
+.IX Item "--mode STR, -m STR"
+Set the modification. Possible values are 'raw' and 'flv', it
+defaults to 'raw'. just an alias for 'outter_var/mod'
+.IP "\fB\-\-type \s-1STR\s0, \-t \s-1STR\s0\fR" 4
+.IX Item "--type STR, -t STR"
+Set the type of the file pointed by the url. Possible values
+are 'static', 'torrent' and 'metalink'. It defaults
+to 'static'. 'static' are for http static file, 'torrent' is for 
+bittorrent files and 'metalink' for metalink files(beta).
+.IP "\fB\-\-path \s-1STR\s0, \-p \s-1STR\s0\fR" 4
+.IX Item "--path STR, -p STR"
+Used to select a given file when the uri points is a multi-file
+metafile (torrent or metalink).
+.IP "\fB\-v\fR" 4
+.IX Item "-v"
+Increase the verbose level. It may be used multiple times.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
-.IP "\fBbasic usage\fR" 4
-.IX Item "basic usage"
-$ neoip-url-stream http://localhost:4560 a761ce3a superstream
+.IP "\fBbasic url building\fR" 4
+.IX Item "basic url building"
+$ neoip-url-static http://example.com/mystaticfile
 .Sp
-This will display the following in stdout
+Display the url for mystaticfile. Which gonna go thru neoip-webpack
+if it is present.
+.IP "\fBCoupling with other tools\fR" 4
+.IX Item "Coupling with other tools"
+$ mplayer `neoip\-url\-static http://example.com/video.mp4`
 .Sp
-http://localhost:4560/a761ce3a/superstream
-.IP "\fBspecifying mdata_srv_uri\fR" 4
-.IX Item "specifying mdata_srv_uri"
-$ neoip-url-stream \-s http://example.com http://localhost:4560 a761ce3a superstream
-.Sp
-This will display the following in stdout
-.Sp
-http://localhost:4560/a761ce3a/superstream?mdata_srv_uri=http%3A//example.com
+Will generate the neoip url for this file and mplayer will directly
+read the video from neoip-webpack. This means you can read a video
+directly from a torrent!
