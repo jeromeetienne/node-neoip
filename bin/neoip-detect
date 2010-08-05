@@ -1,5 +1,7 @@
 #! /bin/sh
 
-ROOTDIR=/home/jerome/webwork/node-neoip
+
+# jme- not sure how to handle this path
+ROOTDIR=/usr/share/neoip-utils
 
 exec node $ROOTDIR/lib/neoip_app_detect.js $*
