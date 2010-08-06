@@ -8,7 +8,7 @@ Homepage: http://github.com/jeromeetienne/node-neoip
 
 Package: neoip-utils
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, neoip-webpack, nodejs
 Description: Command line utils for neoip
  A bunch of utils to use neoip from the command line. It allows to easily
  build url for static and streamed contents.
