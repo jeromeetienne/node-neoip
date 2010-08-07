@@ -35,7 +35,7 @@ install: build
 	cp $(DST_DIR_LIB)/bin/neoip-url-static	$(DST_DIR_BIN)
 	cp $(DST_DIR_LIB)/bin/neoip-url-stream	$(DST_DIR_BIN)
 	cp $(DST_DIR_LIB)/bin/neoip-detect	$(DST_DIR_BIN)
-	install -d $(DST_DIR_MAN)
+	install -d $(DST_DIR_MAN)/man1
 	cp man/neoip-url-static.1		$(DST_DIR_MAN)/man1
 	cp man/neoip-url-stream.1		$(DST_DIR_MAN)/man1
 	cp man/neoip-detect.1			$(DST_DIR_MAN)/man1

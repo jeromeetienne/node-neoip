@@ -1,5 +1,6 @@
 // declare neoip namespace
-var neoip	= neoip || {};
+neoip		= neoip 		|| {};
+neoip.rpc_call	= neoip.rpc_call	|| {};
 
 /**
  * do a rpc call to a neoip application 
