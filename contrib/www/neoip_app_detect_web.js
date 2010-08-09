@@ -1,6 +1,7 @@
 // declare needed namespaces
-neoip			= neoip 		|| {}
-neoip.app_detect	= neoip.app_detect	|| {}
+if( typeof(exports)==="object" )	GLOBAL.neoip	= GLOBAL.neoip	|| {}
+else					neoip		= neoip 	|| {}
+neoip.app_detect	= neoip.app_detect	|| {};
 (function(){	// module closure begining
 
 //////////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,6 @@
-// declare neoip namespace
-neoip		= neoip 		|| {};
-neoip.rpc_call	= neoip.rpc_call	|| {};
-
+// declare needed namespaces
+if( typeof(exports)==="object" )	GLOBAL.neoip	= GLOBAL.neoip	|| {}
+else					neoip		= neoip 	|| {}
 /**
  * do a rpc call to a neoip application 
 */
