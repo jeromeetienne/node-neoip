@@ -1,3 +1,15 @@
+neoip-utils (0.7.0~lucid1~ppa201008131424) lucid; urgency=low
+
+  * Another build
+
+ -- Jerome Etienne <jerome.etienne@gmail.com>  Fri, 13 Aug 2010 14:24:41 +0200
+
+neoip-utils (0.6.0~lucid1~ppa201008131424) lucid; urgency=low
+
+  * Another build
+
+ -- Jerome Etienne <jerome.etienne@gmail.com>  Fri, 13 Aug 2010 14:24:02 +0200
+
 neoip-utils (0.6.0~lucid1~ppa201008061045) lucid; urgency=low
 
   * Another build

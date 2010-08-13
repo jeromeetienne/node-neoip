@@ -4,7 +4,7 @@
 all:
 
 PKGNAME="neoip-utils"
-VERSION="0.6.0"
+VERSION="0.7.0"
 SRC_DIR=$(shell /bin/pwd)
 DST_DIR_LIB=$(DESTDIR)/usr/share/neoip-utils
 DST_DIR_BIN=$(DESTDIR)/usr/bin
