@@ -7,3 +7,6 @@
 [submodule "contrib/vendor/underscore"]
 	path = contrib/vendor/underscore
 	url = http://github.com/documentcloud/underscore.git
+[submodule "contrib/vendor/brequire"]
+	path = contrib/vendor/brequire
+	url = http://github.com/weepy/brequire.git

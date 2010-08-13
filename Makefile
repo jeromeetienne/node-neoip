@@ -14,10 +14,12 @@ DST_DIR_MAN=$(DESTDIR)/usr/share/man
 #		misc								#
 #################################################################################
 doc:
-	pod2man --section=1 --release=$(VERSION) lib/url_builder_oload_exe.js	> man/neoip-url-static.1
-	pod2man --section=1 --release=$(VERSION) lib/url_builder_casto_exe.js	> man/neoip-url-stream.1
-	pod2man --section=1 --release=$(VERSION) lib/neoip_app_detect_exe.js	> man/neoip-detect.1
+	pod2man --section=1 --release=$(VERSION) lib/url_builder_oload_exe.js	> doc/man/neoip-url-static.1
+	pod2man --section=1 --release=$(VERSION) lib/url_builder_casto_exe.js	> doc/man/neoip-url-stream.1
+	pod2man --section=1 --release=$(VERSION) lib/neoip_app_detect_exe.js	> doc/man/neoip-detect.1
 
+jsdoc:
+	jsrun.sh -d=doc/jsdoc lib/
 
 #################################################################################
 #		usual targets							#
@@ -36,9 +38,9 @@ install: build
 	cp $(DST_DIR_LIB)/bin/neoip-url-stream	$(DST_DIR_BIN)
 	cp $(DST_DIR_LIB)/bin/neoip-detect	$(DST_DIR_BIN)
 	install -d $(DST_DIR_MAN)/man1
-	cp man/neoip-url-static.1		$(DST_DIR_MAN)/man1
-	cp man/neoip-url-stream.1		$(DST_DIR_MAN)/man1
-	cp man/neoip-detect.1			$(DST_DIR_MAN)/man1
+	cp doc/man/neoip-url-static.1		$(DST_DIR_MAN)/man1
+	cp doc/man/neoip-url-stream.1		$(DST_DIR_MAN)/man1
+	cp doc/man/neoip-detect.1		$(DST_DIR_MAN)/man1
 
 uninstall:
 	rm -rf $(DST_DIR_LIB)
