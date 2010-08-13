@@ -7,16 +7,16 @@ all: clean brequire pack minify
 
 pack:
 	echo					 > webpeer-$(VERSION).js
-	cat webpeer_prefix.js			>> webpeer-$(VERSION).js
+	cat build_prefix.js			>> webpeer-$(VERSION).js
 	cat ../vendor/brequire/lib/require.js	>> webpeer-$(VERSION).js
 	cat `ls build/*.js | grep -v _test.js | grep -v _exe.js`  >> webpeer-$(VERSION).js
-	cat webpeer_suffix.js 			>> webpeer-$(VERSION).js
+	cat build_suffix.js 			>> webpeer-$(VERSION).js
 
 minify:
 	cat webpeer-$(VERSION).js | closurec > webpeer-$(VERSION)-min.js
 
 brequire:
-	../vendor/brequire/bin/brequire ../lib/ build/
+	#../vendor/brequire/bin/brequire ../lib/ build/
 	brequire ../lib/ build/
 
 clean:
