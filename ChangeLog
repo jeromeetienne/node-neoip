@@ -1,3 +1,12 @@
-Current version
+current -- future
+
+* nothing yet
+
+
+0.7.0 -- Fri Aug 13 14:38:27 CEST 2010
 
 * ported to brequire http://github.com/weepy/brequire
+
+* Made a ubuntu package in ppa neoip-utils
+
+* a lot of other things
