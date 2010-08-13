@@ -13,7 +13,7 @@ pack:
 	cat build_suffix.js 			>> webpeer-$(VERSION).js
 
 minify:
-	cat webpeer-$(VERSION).js | closurec > webpeer-$(VERSION)-min.js
+	cat webpeer-$(VERSION).js | closurec --compilation_level SIMPLE_OPTIMIZATIONS > webpeer-$(VERSION)-min.js
 
 brequire:
 	#../vendor/brequire/bin/brequire ../lib/ build/
