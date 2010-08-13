@@ -1,10 +1,19 @@
 # raw makefile
 # - ease repeatitive operations
 
-all:
+VERSION=0.7.0
 
-brequirify:
+all: clean brequire pack minify
+
+pack:
+	cat ../vendor/brequire/lib/require.js `ls build/*.js | grep -v _test.js | grep -v _exe.js` > webpeer-$(VERSION).js
+
+minify:
+	cat webpeer-$(VERSION).js | closurec > webpeer-$(VERSION)-min.js
+
+brequire:
 	../vendor/brequire/bin/brequire ../lib/ build/
 
 clean:
 	rm -f build/*.js
+	rm -f webpeer-*.js webpeer-*-min.js
