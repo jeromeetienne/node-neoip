@@ -14,9 +14,9 @@ DST_DIR_MAN=$(DESTDIR)/usr/share/man
 #		misc								#
 #################################################################################
 doc:
-	pod2man --section=1 --release=$(VERSION) lib/oload_url_builder.js	> man/neoip-url-static.1
-	pod2man --section=1 --release=$(VERSION) lib/casto_url_builder.js	> man/neoip-url-stream.1
-	pod2man --section=1 --release=$(VERSION) lib/neoip_app_detect.js	> man/neoip-detect.1
+	pod2man --section=1 --release=$(VERSION) lib/url_builder_oload_exe.js	> man/neoip-url-static.1
+	pod2man --section=1 --release=$(VERSION) lib/url_builder_casto_exe.js	> man/neoip-url-stream.1
+	pod2man --section=1 --release=$(VERSION) lib/neoip_app_detect_exe.js	> man/neoip-detect.1
 
 
 #################################################################################
