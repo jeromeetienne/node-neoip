@@ -25,7 +25,7 @@
 //   - fixed
 
 var casti_ctrl_t	= require('../../lib/casti_ctrl_t');
-var casto_url_builder	= require('../../lib/casto_url_builder'); 
+var url_builder_casto	= require('../../lib/url_builder_casto'); 
 var casto_testclient_t	= require('../../lib/casto_testclient_t');
 var node_chargen	= require('../../vendor/node-chargen/node-chargen');
 var tty_color		= require('../../vendor/node-helpers/ez_tty_color');
@@ -120,7 +120,7 @@ var casto_testclients_start	= function(succeed_cb, failure_cb){
 			(function(){ // TODO this closure stuff is bad
 				var casto_idx	= i*n_casto + j;
 				// build the stream_url
-				var stream_url		= casto_url_builder.create({
+				var stream_url		= url_builder_casto.create({
 					base_url	: "http://127.0.0.1:4560",
 					cast_name	: "superstream"+i,
 					cast_privhash	: casti_ctrls[i].cast_privhash()
