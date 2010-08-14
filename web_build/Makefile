@@ -9,7 +9,11 @@ ifeq ($(origin DESTDIR), undefined)
 	DESTDIR=.
 endif
 
-all: clean brequire pack minify
+all: clean brequire pack minify symlink
+
+brequire:
+	#../vendor/brequire/bin/brequire ../lib/ build/
+	brequire ../lib/ build/
 
 pack:
 	echo					 > $(DESTDIR)/webpeer-$(VERSION).js
@@ -20,11 +24,11 @@ pack:
 
 minify:
 	cat $(DESTDIR)/webpeer-$(VERSION).js | closurec > $(DESTDIR)/webpeer-$(VERSION)-min.js
-
-brequire:
-	#../vendor/brequire/bin/brequire ../lib/ build/
-	brequire ../lib/ build/
-
+	
+symlink:
+	ln -sf ./webpeer-$(VERSION).js		$(DESTDIR)/webpeer-lastest.js
+	ln -sf ./webpeer-$(VERSION)-min.js	$(DESTDIR)/webpeer-lastest-min.js
+	
 clean:
 	rm -f build/*.js
 	rm -f webpeer-*.js webpeer-*-min.js
