@@ -9,7 +9,7 @@ ifeq ($(origin DESTDIR), undefined)
 	DESTDIR=.
 endif
 
-all: clean brequire pack minify symlink
+all: clean brequire pack minify latest
 
 brequire:
 	#../vendor/brequire/bin/brequire ../lib/ build/
@@ -24,11 +24,13 @@ pack:
 
 minify:
 	cat $(DESTDIR)/webpeer-$(VERSION).js | closurec > $(DESTDIR)/webpeer-$(VERSION)-min.js
-	
-symlink:
-	ln -sf ./webpeer-$(VERSION).js		$(DESTDIR)/webpeer-lastest.js
-	ln -sf ./webpeer-$(VERSION)-min.js	$(DESTDIR)/webpeer-lastest-min.js
+
+# latest: doesnt do symlink because github pages dont follow symlink
+latest:
+	cp -f $(DESTDIR)/webpeer-$(VERSION).js		$(DESTDIR)/webpeer-lastest.js
+	cp -f $(DESTDIR)/webpeer-$(VERSION)-min.js	$(DESTDIR)/webpeer-lastest-min.js
+	cp -f $(DESTDIR)/webpeer-$(VERSION)-min.js	$(DESTDIR)/webpeer.js
 	
 clean:
 	rm -f build/*.js
-	rm -f webpeer-*.js webpeer-*-min.js
+	rm -f webpeer.js webpeer-*.js webpeer-*-min.js
