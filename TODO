@@ -1,4 +1,15 @@
-Make a website
+- contrib/stress_test
+  - /casti & /oload
+- remove contrib web
+- try to move the submodules in /vendor
+- try to remove the underscore dependancy for casti_ctrl_t
+- remove incommonjsbrowser repo
+- fix brequire new version
+  - time to learn git a bit more
+- webpeer.it: download page
+  - your computer is webpeered (green)
+  - your computer is not webpeered (red)
+
 
 ***********************************************************
 TODO
@@ -24,9 +35,3 @@ NAMING:
   - usually i use _t at the end of class. This make a clear diff between the naming
     of the object and the naming of the class
   - some use upper/lower char instead
-***********************************************************
-Web compatibility:
-- how to be compatible with web
-  - what need to be compatible ?
-  - oload_url_builder/casto_url_builder
-  - app detect
