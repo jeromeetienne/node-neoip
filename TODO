@@ -1,6 +1,6 @@
 - try to move the submodules in /vendor
 - remove incommonjsbrowser repo
-- fix brequire new version
+- DONE fix brequire new version
   - time to learn git a bit more
 - DONE try to remove the underscore dependancy for casti_ctrl_t
   - http://philrathe.com/articles/equiv
@@ -16,7 +16,6 @@
 - DONE contrib/stress_test
   - /casti & /oload
 - DONE remove contrib web
-
 ***********************************************************
 TODO
 - contrib/

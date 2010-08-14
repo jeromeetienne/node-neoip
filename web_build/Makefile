@@ -13,7 +13,8 @@ all: clean brequire pack minify latest
 
 brequire:
 	#../vendor/brequire/bin/brequire ../lib/ build/
-	brequire ../lib/ build/
+	#brequire ../lib/ build/
+	~/webwork/brequire/bin/brequire ../lib/ build/
 
 pack:
 	echo					 > $(DESTDIR)/webpeer-$(VERSION).js
