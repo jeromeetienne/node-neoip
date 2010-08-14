@@ -1,21 +1,21 @@
-- contrib/stress_test
-  - /casti & /oload
-- remove contrib web
 - try to move the submodules in /vendor
-- try to remove the underscore dependancy for casti_ctrl_t
-  - http://philrathe.com/articles/equiv
 - remove incommonjsbrowser repo
 - fix brequire new version
   - time to learn git a bit more
+- DONE try to remove the underscore dependancy for casti_ctrl_t
+  - http://philrathe.com/articles/equiv
 - webpeer.it: download page
   - your computer is webpeered (green)
   - your computer is not webpeered (red)
-- url of library
+- DONE url of library
   - http://webpeer.it/js/webpeer-lastest.js
   - http://webpeer.it/js/webpeer-lastest-min.js
-- web_build: honor DESTDIR in destination file
+- DONE web_build: honor DESTDIR in destination file
   - default to .
   - thus in webpeer.it site, use this to generate import the last version
+- DONE contrib/stress_test
+  - /casti & /oload
+- DONE remove contrib web
 
 ***********************************************************
 TODO
