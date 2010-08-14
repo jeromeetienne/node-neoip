@@ -1,34 +1,15 @@
 #!/usr/bin/env node
-// - fix event and display in those .js
-//   - clean the code + doc at least inline
+//
 // - casti core dump with casti_ctrl_t with short period and > 3 stream
 //   - this one 'disapeared'.... no good
 //   - maybe because now the dns resolution is much faster... so the race no more happen
-// - FIXED BUG: publication seems to fails if there are too many casti are the same time
-//   - the issue is in neoip do publish ? or in the server ?
-//   - i think it may be the server... because it is related to the number of swarm
-//   - so it is a collision somewhere
-//   - TODO add logs in dopublish, look at them to see if anything seems fishy
-//     - change the timer for retry yo see if it fix anything
-//   - TODO how to see if there is a trouble with the server
-//     - current server is in php with fcgi. so hard to debug (require apache reload
-//       at each modification)
-//     - write a tester of this protocol in nodejs ? is there a xmlrpc in node
-//   - UPDATE: tracked it down to dns resolution.... if no dns resolution is done
-//     in the mdata_echo_srv, all is cool, event at 100 streams
-//   - UPDATE: this was a bug in asyncexe, used by host2ip_fork. fixed now
-// - FIXED BUG: neoip-casti to never timeout a swarm
-// - FIXED BUG: kinda casti should publish much faster than that
-//   - find out why it is so slow... log... try to figure out what is going on
-//   - is there a timeout ?
-//   - see if neoip_bt_scasti_mod_raw_profile.cpp can publish imediatly...
-//   - fixed
 
-var casti_ctrl_t	= require('../../lib/casti_ctrl_t');
-var url_builder_casto	= require('../../lib/url_builder_casto'); 
-var casto_testclient_t	= require('../../lib/casto_testclient_t');
-var node_chargen	= require('../../vendor/node-chargen/node-chargen');
-var tty_color		= require('../../vendor/node-helpers/ez_tty_color');
+var project_path	= "../../..";
+var casti_ctrl_t	= require(project_path+'/lib/casti_ctrl_t');
+var url_builder_casto	= require(project_path+'/lib/url_builder_casto'); 
+var casto_testclient_t	= require(project_path+'/lib/casto_testclient_t');
+var node_chargen	= require(project_path+'/vendor/node-chargen/node-chargen');
+var tty_color		= require(project_path+'/vendor/node-helpers/ez_tty_color');
 
 
 // tunable from cmdline

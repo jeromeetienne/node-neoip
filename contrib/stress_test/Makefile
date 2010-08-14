@@ -6,9 +6,9 @@ all: test
 test: test_casti test_oload
 
 test_casti:
-	(cd casti_stress_test && make test)
+	(cd casti && make test)
 
 test_oload:
-	(cd oload_stress_test && make test)
+	(cd oload && make test)
 
 

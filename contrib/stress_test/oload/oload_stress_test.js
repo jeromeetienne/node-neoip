@@ -20,10 +20,11 @@
 var sys		= require('sys');
 var fs		= require('fs');
 // local dependancies
-var cmp_digest	= require('./test_accuracy').cmp_digest;
-var ezhttp	= require('../vendor/node-helpers/ez_http');
-var ttyc	= require('../vendor/node-helpers/ez_tty_color');
-var strutils	= require('../vendor/node-helpers/strutils');
+var project_path	= "../../..";
+var cmp_digest		= require('./test_accuracy').cmp_digest;
+var ezhttp		= require(project_path+'/vendor/node-helpers/ez_http');
+var ttyc		= require(project_path+'/vendor/node-helpers/ez_tty_color');
+var strutils		= require(project_path+'/vendor/node-helpers/strutils');
 
 // default parameters for cmdline options
 var range_len_base	= null;

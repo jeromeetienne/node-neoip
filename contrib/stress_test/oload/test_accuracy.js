@@ -1,12 +1,14 @@
+// system dependancies
 var sys		= require('sys');
 var http	= require('http');
 var url_module	= require('url');
 var crypto	= require('crypto');
 var fs		= require('fs');
-
-var ez_output	= require('../vendor/node-helpers/ez_output');
-var ez_fileutils= require('../vendor/node-helpers/ez_fileutils');
-var ezhttp	= require('../vendor/node-helpers/ez_http');
+// local dependancies
+var project_path	= "../../..";
+var ez_output		= require(project_path+'/vendor/node-helpers/ez_output');
+var ez_fileutils	= require(project_path+'/vendor/node-helpers/ez_fileutils');
+var ezhttp		= require(project_path+'/vendor/node-helpers/ez_http');
 
 /**
  * cpu digest http
