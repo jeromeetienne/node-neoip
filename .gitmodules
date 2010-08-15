@@ -1,6 +1,0 @@
-[submodule "contrib/vendor/node-chargen"]
-	path = contrib/vendor/node-chargen
-	url = git@github.com:jeromeetienne/node-chargen.git
-[submodule "contrib/vendor/node-helpers"]
-	path = contrib/vendor/node-helpers
-	url = git@github.com:jeromeetienne/node-helpers.git
