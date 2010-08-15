@@ -3,11 +3,39 @@
 <script src="build/webpeer-0.7.0.js"></script>
 
 <script>
-webpeer.ready(function(){
-	console.log("webpeer is "+webpeer.avail());	
-});	
+
+/**
+ *
+ * how to orga the badge
+ * - blog post to describe
+ * - included in webpeer.js
+ * - where to store the images
+ *   - http://webpeer.it/badge/exclamation.png
+*/
+
+/**
+ * @param {string} the dom element id of the img tag
+*/
+webpeer.badge	= function(elem_id){
+	webpeer.monitor(function(){
+		var elem	= document.getElementById("webpeer_badge");
+		elem.src	= webpeer.avail() ? 'images/accept.png' : 'images/exclamation.png';
+		if( webpeer.avail() ){
+			elem.title	= "You are a web peer. Welcome!";
+		}else{
+			elem.title	= "You are not yet a web peer. Click to be one.";		
+		}
+	});
+}
 </script>
 
+<a href="http://webpeer.it">
+	<img id="webpeer_badge"	style="border-style: hidden" width="16" height="16"	src="images/wait16trans.gif"
+				title="Probbing webpeer"/>
+</a>
+<script>
+	webpeer.badge('webpeer_badge');
+</script>
 	
 </body>
 </html>

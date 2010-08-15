@@ -1,5 +1,5 @@
-- try to move the submodules in /vendor
 - remove incommonjsbrowser repo
+- DONE try to move the submodules in /vendor
 - DONE fix brequire new version
   - time to learn git a bit more
 - DONE try to remove the underscore dependancy for casti_ctrl_t
