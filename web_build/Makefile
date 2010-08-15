@@ -12,12 +12,12 @@ endif
 all: clean brequire pack minify latest
 
 brequire:
-	../vendor/brequire/bin/brequire ../lib/ build/
+	../vendor/brequire/bin/brequire ../lib/ build/lib
 
 pack:
 	cat build_prefix.js			 > $(DESTDIR)/webpeer-$(VERSION).js
 	cat ../vendor/brequire/lib/brequire.js	>> $(DESTDIR)/webpeer-$(VERSION).js
-	cat `ls build/*.js | grep -v _test.js | grep -v _exe.js`  >> $(DESTDIR)/webpeer-$(VERSION).js
+	cat `ls build/lib/*.js | grep -v _test.js | grep -v _exe.js`  >> $(DESTDIR)/webpeer-$(VERSION).js
 	cat build_suffix.js 			>> $(DESTDIR)/webpeer-$(VERSION).js
 
 minify:
