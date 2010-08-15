@@ -3,22 +3,19 @@
 
 VERSION=0.7.0
 
-# if DESTDIR is not yet defined use "./"
+# if DESTDIR is not yet defined use "./build"
 # - thus "DESTDIR=/tmp make" will generate webpeer-*.js in /tmp
 ifeq ($(origin DESTDIR), undefined)
-	DESTDIR=.
+	DESTDIR=./build
 endif
 
 all: clean brequire pack minify latest
 
 brequire:
-	#../vendor/brequire/bin/brequire ../lib/ build/
-	#brequire ../lib/ build/
-	~/work/brequire/bin/brequire ../lib/ build/
+	../vendor/brequire/bin/brequire ../lib/ build/
 
 pack:
-	echo					 > $(DESTDIR)/webpeer-$(VERSION).js
-	cat build_prefix.js			>> $(DESTDIR)/webpeer-$(VERSION).js
+	cat build_prefix.js			 > $(DESTDIR)/webpeer-$(VERSION).js
 	cat ../vendor/brequire/lib/brequire.js	>> $(DESTDIR)/webpeer-$(VERSION).js
 	cat `ls build/*.js | grep -v _test.js | grep -v _exe.js`  >> $(DESTDIR)/webpeer-$(VERSION).js
 	cat build_suffix.js 			>> $(DESTDIR)/webpeer-$(VERSION).js
@@ -34,4 +31,3 @@ latest:
 	
 clean:
 	rm -f build/*.js
-	rm -f webpeer.js webpeer-*.js webpeer-*-min.js
