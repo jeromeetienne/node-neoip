@@ -14,12 +14,12 @@ all: clean brequire pack minify latest
 brequire:
 	#../vendor/brequire/bin/brequire ../lib/ build/
 	#brequire ../lib/ build/
-	~/webwork/brequire/bin/brequire ../lib/ build/
+	~/work/brequire/bin/brequire ../lib/ build/
 
 pack:
 	echo					 > $(DESTDIR)/webpeer-$(VERSION).js
 	cat build_prefix.js			>> $(DESTDIR)/webpeer-$(VERSION).js
-	cat ../vendor/brequire/lib/require.js	>> $(DESTDIR)/webpeer-$(VERSION).js
+	cat ../vendor/brequire/lib/brequire.js	>> $(DESTDIR)/webpeer-$(VERSION).js
 	cat `ls build/*.js | grep -v _test.js | grep -v _exe.js`  >> $(DESTDIR)/webpeer-$(VERSION).js
 	cat build_suffix.js 			>> $(DESTDIR)/webpeer-$(VERSION).js
 
