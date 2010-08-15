@@ -1,0 +1,9 @@
+[submodule "vendor/brequire"]
+	path = vendor/brequire
+	url = git@github.com:jeromeetienne/brequire.git
+[submodule "vendor/node-helpers"]
+	path = vendor/node-helpers
+	url = git@github.com:jeromeetienne/node-helpers.git
+[submodule "vendor/node-chargen"]
+	path = vendor/node-chargen
+	url = git@github.com:jeromeetienne/node-chargen.git
