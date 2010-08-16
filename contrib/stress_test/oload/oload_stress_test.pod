@@ -36,4 +36,4 @@ detect bugs which are not in the deterministic tests.
 
 =head1 SEE ALSO
 
-neoip-oload(1), neoip-webpack(1)
+neoip-oload(1), neoip-webpeer(1)
