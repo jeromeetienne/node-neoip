@@ -32,7 +32,7 @@ jsdoc:
 build: doc
 	echo "make build"
 
-clean:
+clean: manpage_clean
 	echo "make clean"
 
 install: build
