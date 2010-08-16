@@ -15,19 +15,18 @@ brequire:
 	../vendor/brequire/bin/brequire ../lib/ build/lib
 
 pack:
-	cat build_prefix.js			 > $(DESTDIR)/webpeer-$(VERSION).js
-	cat ../vendor/brequire/lib/brequire.js	>> $(DESTDIR)/webpeer-$(VERSION).js
-	cat `ls build/lib/*.js | grep -v _test.js | grep -v _exe.js`  >> $(DESTDIR)/webpeer-$(VERSION).js
-	cat build_suffix.js 			>> $(DESTDIR)/webpeer-$(VERSION).js
+	cat build_prefix.js			 > $(DESTDIR)/webpeer.js
+	cat ../vendor/brequire/lib/brequire.js	>> $(DESTDIR)/webpeer.js
+	cat `ls build/lib/*.js | grep -v _test.js | grep -v _exe.js`  >> $(DESTDIR)/webpeer.js
+	cat build_suffix.js 			>> $(DESTDIR)/webpeer.js
 
 minify:
-	cat $(DESTDIR)/webpeer-$(VERSION).js | closurec > $(DESTDIR)/webpeer-$(VERSION)-min.js
+	cat $(DESTDIR)/webpeer.js | closurec > $(DESTDIR)/webpeer.min.js
 
 # latest: doesnt do symlink because github pages dont follow symlink
 latest:
-	cp -f $(DESTDIR)/webpeer-$(VERSION).js		$(DESTDIR)/webpeer-latest.js
-	cp -f $(DESTDIR)/webpeer-$(VERSION)-min.js	$(DESTDIR)/webpeer-latest-min.js
-	cp -f $(DESTDIR)/webpeer-$(VERSION)-min.js	$(DESTDIR)/webpeer.js
+	cp -f $(DESTDIR)/webpeer.js		$(DESTDIR)/webpeer-latest.js
+	cp -f $(DESTDIR)/webpeer.min.js		$(DESTDIR)/webpeer-latest.min.js
 	
 clean:
 	rm -f build/lib/*.js
