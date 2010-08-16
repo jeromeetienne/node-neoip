@@ -30,4 +30,5 @@ latest:
 	cp -f $(DESTDIR)/webpeer-$(VERSION)-min.js	$(DESTDIR)/webpeer.js
 	
 clean:
+	rm -f build/lib/*.js
 	rm -f build/*.js
