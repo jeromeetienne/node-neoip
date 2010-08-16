@@ -25,6 +25,8 @@ minify:
 
 # latest: doesnt do symlink because github pages dont follow symlink
 latest:
+	cp -f $(DESTDIR)/webpeer.js		$(DESTDIR)/webpeer-$(VERSION).js
+	cp -f $(DESTDIR)/webpeer.min.js		$(DESTDIR)/webpeer-$(VERSION).min.js
 	cp -f $(DESTDIR)/webpeer.js		$(DESTDIR)/webpeer-latest.js
 	cp -f $(DESTDIR)/webpeer.min.js		$(DESTDIR)/webpeer-latest.min.js
 	
