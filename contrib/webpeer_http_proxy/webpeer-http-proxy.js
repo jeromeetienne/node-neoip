@@ -1,5 +1,12 @@
 /**
  * http proxy which webpeer content which looks like static files
+ *
+ * - run with:
+ *   node webpeer-http-proxy.js
+ * - on ubuntu, setup http proxy with:
+ *   export http_proxy=http://127.0.0.1:8080
+ * - use with
+ *   mplayer http://example.com/movie.mp4
  * 
  * - initial proxy code from Peteris Krumins (peter@catonmat.net)
  *   - http://www.catonmat.net  --  good coders code, great reuse
