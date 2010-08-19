@@ -9,14 +9,16 @@ ifeq ($(origin DESTDIR), undefined)
 	DESTDIR=./build
 endif
 
-all: clean brequire pack minify version
+BREQUIRE_ROOT	= ../vendor/brequire
+
+all:	clean brequire pack minify version
 
 brequire:
-	../vendor/brequire/bin/brequire ../lib/ build/lib
+	$(BREQUIRE_ROOT)/bin/brequire ../lib/ build/lib
 
 pack:
 	cat build_prefix.js			 > $(DESTDIR)/webpeer.js
-	cat ../vendor/brequire/lib/brequire.js	>> $(DESTDIR)/webpeer.js
+	cat $(BREQUIRE_ROOT)/lib/brequire.js	>> $(DESTDIR)/webpeer.js
 	cat `ls build/lib/*.js | grep -v _test.js | grep -v _exe.js`  >> $(DESTDIR)/webpeer.js
 	cat build_suffix.js 			>> $(DESTDIR)/webpeer.js
 
