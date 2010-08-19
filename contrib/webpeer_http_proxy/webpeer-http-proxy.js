@@ -1,8 +1,8 @@
 /**
- * http proxy which webpeer content which looks like a static files
+ * http proxy which webpeer content which looks like static files
  * 
- * initial proxy code from Peteris Krumins (peter@catonmat.net)
- * - http://www.catonmat.net  --  good coders code, great reuse
+ * - initial proxy code from Peteris Krumins (peter@catonmat.net)
+ *   - http://www.catonmat.net  --  good coders code, great reuse
 */
 
 // include system dependancies
