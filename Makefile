@@ -4,7 +4,7 @@
 all:
 
 PKGNAME="neoip-utils"
-VERSION="0.7.0"
+VERSION="0.7.1"
 SRC_DIR=$(shell /bin/pwd)
 DST_DIR_LIB=$(DESTDIR)/usr/share/neoip-utils
 DST_DIR_BIN=$(DESTDIR)/usr/bin
@@ -25,6 +25,10 @@ manpage_clean:
 
 jsdoc:
 	jsrun.sh -d=doc/jsdoc lib/
+	
+tag_version:
+	git tag -a v$(VERSION) -m "v$(VERSION) - version bump"
+	git push origin v$(VERSION)
 
 #################################################################################
 #		usual targets							#
