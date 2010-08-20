@@ -3,6 +3,9 @@
 // - casti core dump with casti_ctrl_t with short period and > 3 stream
 //   - this one 'disapeared'.... no good
 //   - maybe because now the dns resolution is much faster... so the race no more happen
+// - TODO
+//   - need to get autodetection for casto and casti
+//   - ability to configure casto hostname, casti hostname and chargen destination addr
 
 var project_path	= "../../..";
 var casti_ctrl_t	= require(project_path+'/lib/casti_ctrl_t');
@@ -18,6 +21,13 @@ var n_casto		= 3;
 var casto_max_recved	= null;
 var verbose		= 0;
 
+
+var casto_base_url	= "http://127.0.0.1:4560";
+var casti_base_url	= "http://127.0.0.1:4570";
+var node_chargen_host	= "127.0.0.1";
+var node_chargen_listen	= "127.0.0.1";
+var node_chargen_port	= 8124;
+
 //////////////////////////////////////////////////////////////////////////////////
 //		chargen								//
 //////////////////////////////////////////////////////////////////////////////////
@@ -26,8 +36,8 @@ var chargen_start	= function(){
 	console.assert(chargen_running() === false);
 	// create chargen
 	chargen	= node_chargen.create({
-		hostname	: "127.0.0.1",
-		port		: 8124
+		hostname	: node_chargen_listen,
+		port		: node_chargen_port
 	});
 }
 var chargen_stop	= function(){
@@ -48,12 +58,12 @@ var casti_ctrls_start	= function(succeed_cb, failure_cb){
 			var casti_idx	= i;
 			// launch the casti_ctrl_t
 			var casti_ctrl	= casti_ctrl_t.create({
-				call_url	: "http://127.0.0.1:4570/neoip_casti_ctrl_wpage_jsrest.js",
+				call_url	: casti_base_url+"/neoip_casti_ctrl_wpage_jsrest.js",
 				casti_opts	: {
 					mdata_srv_uri	: "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi",
 					cast_name	: "superstream"+i,
 					cast_privtext	: "supersecret"+i,
-					scasti_uri	: "http://127.0.0.1:8124",
+					scasti_uri	: "http://"+node_chargen_host+":"+node_chargen_port,
 					scasti_mod	: "raw",
 					http_peersrc_uri: "",
 					web2srv_str	: "dummyuserdata"
@@ -102,7 +112,7 @@ var casto_testclients_start	= function(succeed_cb, failure_cb){
 				var casto_idx	= i*n_casto + j;
 				// build the stream_url
 				var stream_url		= url_builder_casto.create({
-					base_url	: "http://127.0.0.1:4560",
+					base_url	: casto_base_url,
 					cast_name	: "superstream"+i,
 					cast_privhash	: casti_ctrls[i].cast_privhash()
 				});
