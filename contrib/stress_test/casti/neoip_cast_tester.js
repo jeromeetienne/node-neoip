@@ -11,9 +11,9 @@ var project_path	= "../../..";
 var casti_ctrl_t	= require(project_path+'/lib/casti_ctrl_t');
 var url_builder_casto	= require(project_path+'/lib/url_builder_casto'); 
 var casto_testclient_t	= require(project_path+'/lib/casto_testclient_t');
+var app_detect		= require(project_path+'/lib/neoip_app_detect');
 var node_chargen	= require(project_path+'/vendor/node-chargen/node-chargen');
 var tty_color		= require(project_path+'/vendor/node-helpers/ez_tty_color');
-
 
 // tunable from cmdline
 var n_casti		= 1;
@@ -233,6 +233,8 @@ if( process.argv[1] == __filename ){
 		n_casti		: null,
 		n_casto		: null,
 		casto_max_recved: null,
+		webpeer_host	: "127.0.0.1",
+		chargen_host	: "127.0.0.1",
 		verbose		: null
 	};
 	var disp_usage	= function(prefix){
@@ -241,6 +243,8 @@ if( process.argv[1] == __filename ){
 		console.log("");
 		console.log("Test neoip-casto/neoip-casti.");
 		console.log("");
+		console.log("-w|--webpeer_host str\t\tSet the hostname to probe for webpeer.");
+		console.log("-c|--chargen_host str\t\tSet the hostname to listen on chargen.");
 		console.log("-i|--n_casti num\t\tSet the number of broadcast to setup.");
 		console.log("-o|--n_casto num\t\tSet the number of reader on each of broadcasts");
 		console.log("-l|--casti_max_recved len\tSet the number of byte to read by each neoip-casto.");
@@ -252,7 +256,13 @@ if( process.argv[1] == __filename ){
 		var key	= process.argv[optind];
 		var val	= process.argv[optind+1];
 		//console.log("key="+key+" val="+val);
-		if( key == '-i' || key == "--n_casti" ){
+		if( key == '-w' || key == "--webpeer_host" ){
+			cmdline_opts.webpeer_host	= val;
+			optind		+= 1;
+		}else if( key == '-c' || key == "--chargen_host" ){
+			cmdline_opts.chargen_host	= val;
+			optind		+= 1;
+		}else if( key == '-i' || key == "--n_casti" ){
 			cmdline_opts.n_casti	= parseInt(val);
 			optind		+= 1;
 		}else if( key == '-o' || key == "--n_casto" ){
@@ -273,11 +283,30 @@ if( process.argv[1] == __filename ){
 	}
 	
 	
+	
+	
 	// copy the cmdline_opts
 	n_casti			= cmdline_opts.n_casti		|| n_casti;
 	n_casto			= cmdline_opts.n_casto		|| n_casto;
 	casto_max_recved	= cmdline_opts.casto_max_recved	|| casto_max_recved;
 	verbose			= cmdline_opts.verbose		|| verbose;
-	// call the main()
-	main();
+
+	node_chargen_host	= cmdline_opts.chargen_host;
+	node_chargen_listen	= cmdline_opts.chargen_host;
+
+	// perform discovery
+	app_detect.discover_webpeer({
+		completed_cb	: function(status){
+			if(status != "installed"){
+				console.log("webpeer is "+status);
+				process.exit(-1);
+			}
+			// set casto_base_url + casti_base_url according to app_detect cache
+			casto_base_url		= app_detect.cache_get("casto").root_url,
+			casti_base_url		= app_detect.cache_get("casti").root_url,
+			// call the main()
+			main();
+		},
+		hostname	: cmdline_opts.webpeer_host
+	});
 }
