@@ -1,4 +1,4 @@
-- remove incommonjsbrowser repo
+- remove incommonjsbrowser repo 
 - DONE try to move the submodules in /vendor
 - DONE fix brequire new version
   - time to learn git a bit more
