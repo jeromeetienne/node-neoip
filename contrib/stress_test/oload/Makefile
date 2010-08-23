@@ -1,8 +1,16 @@
 # raw makefile
 # - ease repeatitive operations
 
-CONTENT_URL	:= $(shell node ../../../lib/url_builder_oload_exe.js http://127.0.0.1/~jerome/Videos/Fearless.mp4)
-#CONTENT_URL	:= $(shell node ../../../lib/url_builder_oload_exe.js -n 192.168.0.16 http://192.168.0.13/~jerome/Videos/Fearless.mp4)
+#################################################################################
+# normal variable to get neoip-oload+content on localhost
+OLOAD_HOST	:= "127.0.0.1"
+CONTENT_HOST	:= "127.0.0.1"
+#################################################################################
+# variables to get neoip-oload on amacbook.local + content on jmebox.local
+#OLOAD_HOST	:= "amacbook.local"
+#CONTENT_HOST	:= "jmebox.local"
+
+CONTENT_URL	:= `node ../../../lib/url_builder_oload_exe.js -n $(OLOAD_HOST) http://$(CONTENT_HOST)/~jerome/Videos/Fearless.mp4`
 CONTENT_PATH	:= ~/Videos/Fearless.mp4
 
 all: test
