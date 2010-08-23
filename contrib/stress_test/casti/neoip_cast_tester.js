@@ -1,4 +1,17 @@
 #!/usr/bin/env node
+
+/**
+ *
+ * How to reproduce by Hand
+ * - to get the stream original server
+ *   node vendor/node-chargen/node-chargen.js -v
+ * - to publish the stream
+ *   node lib/casti_ctrl_t.js --call_url http://localhost:4570/neoip_casti_ctrl_wpage_jsrest.js -o mdata_srv_uri http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi -o cast_name superstream -o cast_privtext supersecret -o scasti_uri http://127.0.0.1:8124 -o scasti_mod raw -o http_peersrc_uri '' -o web2srv_str 'dummyweb2serv_str' -v
+ * - to retrieve the stream
+ *   curl `node lib/url_builder_casto_exe.js a761ce3a superstream`
+*/
+
+
 //
 // - casti core dump with casti_ctrl_t with short period and > 3 stream
 //   - this one 'disapeared'.... no good
@@ -27,6 +40,7 @@ var casti_base_url	= "http://127.0.0.1:4570";
 var node_chargen_host	= "127.0.0.1";
 var node_chargen_listen	= "127.0.0.1";
 var node_chargen_port	= 8124;
+var mdata_srv_uri	= "http://jmebox.local/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi";
 
 //////////////////////////////////////////////////////////////////////////////////
 //		chargen								//
@@ -60,7 +74,7 @@ var casti_ctrls_start	= function(succeed_cb, failure_cb){
 			var casti_ctrl	= casti_ctrl_t.create({
 				call_url	: casti_base_url+"/neoip_casti_ctrl_wpage_jsrest.js",
 				casti_opts	: {
-					mdata_srv_uri	: "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi",
+					mdata_srv_uri	: mdata_srv_uri,
 					cast_name	: "superstream"+i,
 					cast_privtext	: "supersecret"+i,
 					scasti_uri	: "http://"+node_chargen_host+":"+node_chargen_port,

@@ -2,6 +2,7 @@
 # - ease repeatitive operations
 
 CONTENT_URL	:= $(shell node ../../../lib/url_builder_oload_exe.js http://127.0.0.1/~jerome/Videos/Fearless.mp4)
+#CONTENT_URL	:= $(shell node ../../../lib/url_builder_oload_exe.js -n 192.168.0.16 http://192.168.0.13/~jerome/Videos/Fearless.mp4)
 CONTENT_PATH	:= ~/Videos/Fearless.mp4
 
 all: test
