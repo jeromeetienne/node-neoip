@@ -1,5 +1,0 @@
-#!/usr/bin/env node
-// - during dev, NODE_PATH=.:~/.node_libraries/ node neoip-url http://localhost
-//  - this add . in the library path 
-
-require('../lib/oload_url_builder');
