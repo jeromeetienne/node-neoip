@@ -1,7 +1,7 @@
 {
 	"name"          : "webpeer",
 	"main"          : "./lib/webpeer",
-	"version"       : "0.7.1beta4",
+	"version"       : "0.7.1beta5",
 	"description"   : "webpeer binding",
 	"repository"	:  { "type" : "git",
 		"url"	: "http://github.com/jeromeetienne/node-neoip.git"
