@@ -22,7 +22,7 @@ var webpeer	= require('../../lib/webpeer')
 /**
  * The file extensions to route thru webpeer
 */
-var webpeer_extnames	= ['.webm', '.mp4', '.avi', '.mp3', '.ogg'];
+var webpeer_extnames	= process.argv.length > 2 ? process.argv.slice(2) : ['.webm', '.mp4', '.avi', '.mp3'];
 
 /**
  * Callback for http_server
@@ -66,7 +66,13 @@ function http_server_cb(request, response) {
 // probe webpeer present and then 
 webpeer.ready(function(){
 	// launch http server
-	console.log("Starting the proxy server on port " + 8080 + " (webpeer "+(webpeer.present() ? "present" : "not present")+")");
+	console.log("Starting the proxy server on port " + 8080);
+	if( webpeer.present() ){
+		console.log("webpeer is present and will take cares of "+JSON.stringify(webpeer_extnames));		
+	}else{
+		console.log("webpeer is not present, you'd better launch it");				
+	}
+        // launch the server itself
 	http.createServer(http_server_cb).listen(8080);
 });
 
