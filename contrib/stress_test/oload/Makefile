@@ -9,6 +9,10 @@ CONTENT_HOST	:= "127.0.0.1"
 # variables to get neoip-oload on amacbook.local + content on jmebox.local
 #OLOAD_HOST	:= "amacbook.local"
 #CONTENT_HOST	:= "jmebox.local"
+#################################################################################
+# variables to get neoip-oload on win32vm + content on jmebox.local
+#OLOAD_HOST	:= "192.168.0.17"
+#CONTENT_HOST	:= "192.168.0.13"
 
 CONTENT_URL	:= `node ../../../lib/url_builder_oload_exe.js -n $(OLOAD_HOST) http://$(CONTENT_HOST)/~jerome/Videos/Fearless.mp4`
 CONTENT_PATH	:= ~/Videos/Fearless.mp4

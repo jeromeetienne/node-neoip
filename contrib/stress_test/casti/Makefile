@@ -29,7 +29,35 @@ CHARGEN_HOST	:= "127.0.0.1"
 MDATA_SRC_URI	:= "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi"
 
 ######################################################
+# config on win32vm/casti and jmebox.local/casto
+######################################################
+# NOTE: this one is working
+#CASTI_CALL_URL	:= "http://192.168.0.17:4570"
+#CASTO_HOST	:= "127.0.0.1"
+#CHARGEN_HOST	:= "192.168.0.13"
+#MDATA_SRC_URI	:= "http://192.168.0.13/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi"
+
+######################################################
+# config on win32vm/casti and win32vm/casto
+######################################################
+# NOTE: this one is NOT WORKING
+#CASTI_CALL_URL	:= "http://192.168.0.17:4570"
+#CASTO_HOST	:= "192.168.0.17"
+#CHARGEN_HOST	:= "192.168.0.13"
+#MDATA_SRC_URI	:= "http://192.168.0.13/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi"
+
+######################################################
+# config on win32vm/casto and localhost/casti
+######################################################
+# NOTE: this one is NOT WORKING
+#CASTI_CALL_URL	:= "http://127.0.0.1:4570"
+#CASTO_HOST	:= "192.168.0.17"
+#CHARGEN_HOST	:= "192.168.0.13"
+#MDATA_SRC_URI	:= "http://192.168.0.13/~jerome/neoip_html/cgi-bin/cast_mdata_echo_server.fcgi"
+
+######################################################
 # config on amacbook/casti and jmebox.local/casto
+######################################################
 # NOTE: this one is working
 #CASTI_CALL_URL	:= "http://amacbook.local:4570"
 #CASTO_HOST	:= "127.0.0.1"
@@ -38,6 +66,7 @@ MDATA_SRC_URI	:= "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_se
 
 ######################################################
 # config on amacbook/casto and jmebox.local/casti
+######################################################
 # NOTE: this one is working
 #CASTI_CALL_URL	:= "http://127.0.0.1:4570"
 #CASTO_HOST	:= "amacbook.local"
@@ -46,6 +75,7 @@ MDATA_SRC_URI	:= "http://localhost/~jerome/neoip_html/cgi-bin/cast_mdata_echo_se
 
 ######################################################
 # config on amacbook/casto and amacbook.local/casti
+######################################################
 # NOTE: this one is FAILING... likely amacbook unable to find itself
 # - likely a issue in nslan which isnt doing loopback
 #CASTI_CALL_URL	:= "http://amacbook.local:4570"
