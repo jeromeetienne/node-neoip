@@ -2,10 +2,24 @@
 <body>
 <script src="build/webpeer.js"></script>
 
-This is the badge 
-<a href="http://webpeer.it"><img id="webpeer_badge" style="border-style: hidden" width="16" height="16"
-src="http://webpeer.it/images/badge/wait16trans.gif" title="Probbing webpeer"/></a>
-<script>webpeer.badge('webpeer_badge');</script>
+<img src="http://example.com/image.jpg">link sample</img>
+
+<video controls>
+      <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm; codecs="vp8, vorbis"'/>
+</video>
+
+<script>
+	// detect webpeer presence
+	webpeer.ready(function(){
+		// display in js console
+		console.dir("webpeer is "+(webpeer.present() ? "present" : "not present"));
+		// webpeerify all <a> href
+		var elements	= document.body.getElementsByTagName("img");
+		for(var i=0; i < elements.length; i++ ){
+			elements[i].src	= webpeer.url(elements[i].src);
+		}
+	});
+</script>
 
 </body>
 </html>
