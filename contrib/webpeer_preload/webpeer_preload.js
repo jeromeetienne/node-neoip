@@ -6,6 +6,9 @@
  * * do i make this a real tool or just a demo
  * ** man page + inline help
  * ** source cleanup
+ * * TODO make this more tunable...
+ * ** currently hardcoded for http static file
+ * ** what if i want to preload a .torrent ? 
 */
 
 // include system dependancies
