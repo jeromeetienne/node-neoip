@@ -1,5 +1,10 @@
-0.7.3 - future
+0.7.4 - future
 * 
+
+0.7.3 - Fri Sep  3 23:04:31 CEST 2010
+
+* renamed a bunch of stuff with webpeer instead of neoip
+* added webpeer-preload
 
 
 0.7.2 - Tue Aug 24 21:05:50 CEST 2010
