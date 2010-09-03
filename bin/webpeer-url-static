@@ -1,0 +1,8 @@
+#! /bin/sh
+
+# jme- not sure how to handle this path
+if [ -z "${NEOIP_ROOTDIR+xxx}" ]; then
+	NEOIP_ROOTDIR=/usr/share/webpeer-utils
+fi
+
+exec node $NEOIP_ROOTDIR/lib/url_builder_oload_exe.js $*

@@ -1,6 +1,0 @@
-#! /bin/sh
-
-# jme- not sure how to handle this path
-ROOTDIR=/usr/share/neoip-utils
-
-exec node $ROOTDIR/lib/neoip_app_detect_detect_exe.js $*

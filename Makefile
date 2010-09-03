@@ -3,10 +3,10 @@
 
 all:
 
-PKGNAME="neoip-utils"
-VERSION="0.7.2"
+PKGNAME="webpeer-utils"
+VERSION="0.7.3"
 SRC_DIR=$(shell /bin/pwd)
-DST_DIR_LIB=$(DESTDIR)/usr/share/neoip-utils
+DST_DIR_LIB=$(DESTDIR)/usr/share/webpeer-utils
 DST_DIR_BIN=$(DESTDIR)/usr/bin
 DST_DIR_MAN=$(DESTDIR)/usr/share/man
 
@@ -16,9 +16,10 @@ DST_DIR_MAN=$(DESTDIR)/usr/share/man
 doc: manpage_build
 
 manpage_build:
-	pod2man --section=1 --release=$(VERSION) lib/url_builder_oload_exe.js	> man/neoip-url-static.1
-	pod2man --section=1 --release=$(VERSION) lib/url_builder_casto_exe.js	> man/neoip-url-stream.1
-	pod2man --section=1 --release=$(VERSION) lib/neoip_app_detect_exe.js	> man/neoip-detect.1
+	pod2man --section=1 --release=$(VERSION) lib/oload_preloader_exe.js	> man/webpeer-preload.1
+	pod2man --section=1 --release=$(VERSION) lib/url_builder_oload_exe.js	> man/webpeer-url-static.1
+	pod2man --section=1 --release=$(VERSION) lib/url_builder_casto_exe.js	> man/webpeer-url-stream.1
+	pod2man --section=1 --release=$(VERSION) lib/neoip_app_detect_exe.js	> man/webpeer-detect.1
 
 manpage_clean:
 	rm -f man/*.1
@@ -60,22 +61,26 @@ install: build
 	install -d $(DST_DIR_LIB)
 	rsync -va --exclude debian --exclude .git $(SRC_DIR)/. $(DST_DIR_LIB)
 	install -d $(DST_DIR_BIN)
-	cp $(DST_DIR_LIB)/bin/neoip-url-static	$(DST_DIR_BIN)
-	cp $(DST_DIR_LIB)/bin/neoip-url-stream	$(DST_DIR_BIN)
-	cp $(DST_DIR_LIB)/bin/neoip-detect	$(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/webpeer-preload		$(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/webpeer-url-static	$(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/webpeer-url-stream	$(DST_DIR_BIN)
+	cp $(DST_DIR_LIB)/bin/webpeer-detect		$(DST_DIR_BIN)
 	install -d $(DST_DIR_MAN)/man1
-	cp man/neoip-url-static.1	$(DST_DIR_MAN)/man1
-	cp man/neoip-url-stream.1	$(DST_DIR_MAN)/man1
-	cp man/neoip-detect.1		$(DST_DIR_MAN)/man1
+	cp man/webpeer-preload.1	$(DST_DIR_MAN)/man1
+	cp man/webpeer-url-static.1	$(DST_DIR_MAN)/man1
+	cp man/webpeer-url-stream.1	$(DST_DIR_MAN)/man1
+	cp man/webpeer-detect.1		$(DST_DIR_MAN)/man1
 
 uninstall:
 	rm -rf $(DST_DIR_LIB)
-	rm -f $(DST_DIR_BIN)/neoip-url-static
-	rm -f $(DST_DIR_BIN)/neoip-url-stream
-	rm -f $(DST_DIR_BIN)/neoip-detect
-	rm -f $(DST_DIR_MAN)/man1/neoip-url-static.1
-	rm -f $(DST_DIR_MAN)/man1/neoip-url-stream.1
-	rm -f $(DST_DIR_MAN)/man1/neoip-detect.1
+	rm -f $(DST_DIR_BIN)/webpeer-preload
+	rm -f $(DST_DIR_BIN)/webpeer-url-static
+	rm -f $(DST_DIR_BIN)/webpeer-url-stream
+	rm -f $(DST_DIR_BIN)/webpeer-detect
+	rm -f $(DST_DIR_MAN)/man1/webpeer-preload.1
+	rm -f $(DST_DIR_MAN)/man1/webpeer-url-static.1
+	rm -f $(DST_DIR_MAN)/man1/webpeer-url-stream.1
+	rm -f $(DST_DIR_MAN)/man1/webpeer-detect.1
 
 #################################################################################
 #		deb package handling						#

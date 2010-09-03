@@ -1,6 +1,0 @@
-#! /bin/sh
-
-# jme- not sure how to handle this path
-ROOTDIR=/usr/share/neoip-utils
-
-exec node $ROOTDIR/lib/url_builder_oload_exe.js $*
