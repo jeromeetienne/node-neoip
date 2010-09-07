@@ -1,4 +1,4 @@
-#!/bin/env nodejs
+#!/bin/env nodejs 
 /*
  * generate request - ask for email + fqdn
  * - put that in the template
