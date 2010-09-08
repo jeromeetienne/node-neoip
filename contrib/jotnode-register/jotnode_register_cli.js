@@ -28,7 +28,7 @@ if(true){
 	var fname_temp	= "./certtool.template";
 	var fname_capriv= "/tmp/user.capriv.der";
 	var fname_cacert= "/tmp/user.cacert.der";
-	var fname_catemp= "./certtool.template";
+	var fname_catemp= "./certtool.ca.template";
 	x509.priv_generate(512, fname_capriv, function(){
 	x509.ssig_generate(fname_capriv, fname_cacert, fname_catemp, function(){
 	x509.priv_generate(512, fname_priv, function(){
