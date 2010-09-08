@@ -49,7 +49,7 @@ var x509_certtool_t	= function(){
 		cmdline		+= " --outder --outfile '"+fname_cert+"'";
 		cmdline		+= " --load-ca-privkey '"+fname_capriv+"'";
 		cmdline		+= " --load-ca-certificate '"+fname_cacert+"'";
-		cmdline		+= " --template '"+fname_temp+"'";
+		cmdline		+= " --template '"+fname_catemp+"'";
 		cmdline_run(cmdline, success_cb, faillure_cb);
 	}
 

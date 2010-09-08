@@ -21,7 +21,7 @@ if( false ){
 }
 
 
-if(false){
+if(true){
 	var fname_priv	= "/tmp/user.priv.der";
 	var fname_creq	= "/tmp/user.creq.der";
 	var fname_cert	= "/tmp/user.cert.der";
@@ -43,9 +43,9 @@ if(false){
 
 
 
-if( true ){
+if( false ){
 	var http	= require('http');
-	var url		= "http://127.0.0.1:8124/register?creq="+base64.encode("supertruc");
+	var url		= "http://127.0.0.1:8124/register?creq="+base64.encode_safe("supertruc");
 	var parsed_url	= require('url').parse(url);
 	var pqh_str	= parsed_url.pathname;
 	if( parsed_url.query )	pqh_str	+= "?"+parsed_url.query;
