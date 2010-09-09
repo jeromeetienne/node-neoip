@@ -15,52 +15,53 @@
 var base64	= require('../../lib/base64');
 var x509	= require('./x509_certtool_t').create();
 
-if( false ){
-	console.log(base64.decode(base64.encode("bonjour")));
-	process.exit(-1);
+var do_create_rootca	= function(rootca_domain){
+	
+}
+var do_register		= function(dnsname){
+
 }
 
-
-if(true){
-	var fname_priv	= "/tmp/user.priv.der";
-	var fname_creq	= "/tmp/user.creq.der";
-	var fname_cert	= "/tmp/user.cert.der";
-	var fname_temp	= "./certtool.template";
-	var fname_capriv= "/tmp/user.capriv.der";
-	var fname_cacert= "/tmp/user.cacert.der";
-	var fname_catemp= "./certtool.ca.template";
-	x509.priv_generate(512, fname_capriv, function(){
-	x509.ssig_generate(fname_capriv, fname_cacert, fname_catemp, function(){
-	x509.priv_generate(512, fname_priv, function(){
-	x509.creq_generate(fname_priv, fname_creq, fname_temp, function(){
-	x509.cert_generate(fname_capriv, fname_cacert, fname_catemp, fname_creq, fname_cert, function(){
-	});
-	});
-	});
-	});
-	});
+//////////////////////////////////////////////////////////////////////////////////
+//	parse cmdline								//
+//////////////////////////////////////////////////////////////////////////////////
+// cmdline_opts default
+cmdline_opts	= {
+	verbose			: 0
+};
+var PROGRAM_NAME	= require('path').basename(process.argv[1]);
+var disp_usage	= function(prefix){
+	if(prefix)	console.log(prefix + "\n");
+	console.log("usage:", PROGRAM_NAME, "[OPTIONS]");
+	console.log("");
+	console.log("Super stuff");
+	console.log("");
+	console.log("-v|--verbose\t\t\tIncrease the verbose level (for debug).");
+	console.log("-h|--help\t\t\tDisplay the inline help.");
 }
+var optind	= 2;
+for(;optind < process.argv.length; optind++){
+	var key	= process.argv[optind];
+	var val	= process.argv[optind+1];
+	//console.log("key="+key+" val="+val);
+	if( key == '-v' || key == "--verbose" ){
+		cmdline_opts.verbose	+= 1;
+	}else if( key == "-h" || key == "--help" ){
+		disp_usage();
+		process.exit(0);
+	}else{
+		// if the option doesnt exist, consider it is the first non-option parameters
+		break;
+	}
+}
+// get required options from the rest of the cmdline
+var operation	= process.argv[optind++];
 
-
-
-if( false ){
-	var http	= require('http');
-	var url		= "http://127.0.0.1:8124/register?creq="+base64.encode_safe("supertruc");
-	var parsed_url	= require('url').parse(url);
-	var pqh_str	= parsed_url.pathname;
-	if( parsed_url.query )	pqh_str	+= "?"+parsed_url.query;
-	if( parsed_url.hash  )	pqh_str	+= parsed_url.hash;
-	var client	= http.createClient((parsed_url.port||80), parsed_url.hostname);
-	var request	= client.request('POST', pqh_str, {
-		'host'	: parsed_url.host
-	});
-	request.end();
-	request.on('response', function (response) {
-		console.log('STATUS: ' + response.statusCode);
-		console.log('HEADERS: ' + JSON.stringify(response.headers));
-		response.setEncoding('utf8');
-		response.on('data', function (chunk) {
-			console.log('BODY: ' + chunk);
-		});
-	});	
+// process the operation
+if( operation == "create_rootca" ){
+	var rootca_domain	= process.argv[optind++];
+	do_create_rootca(rootca_domain);
+}else if( operation == "register" ){
+	var dnsname	= process.argv[optind++];
+	do_register(dnsname);
 }
