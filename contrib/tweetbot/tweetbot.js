@@ -1,3 +1,38 @@
+/**
+ * tweetbot
+ * - about bridging irc and twitter
+ * - initial version
+ * - handle it a persistent storage
+ *   - for which channel am on
+ *   - currently only #node.js
+ *   - for the username translation
+ * - find a good name
+ *   - twitter account name ? isnt that the goal of the irc channel itself ?
+ *     - it is one twitter account per channel
+ *   - good irc name
+ * - process
+ *   1. you create a twitter account
+ *   2. you invite tweetbot to your channel and give it your twitter account
+ *
+ *   
+ * - currently limited to #node.js or something
+ * - ircbot register twi_nick is available IIF irc_nick is identified
+ *   - must be done by channel admin ?
+ * - what about msg from/to twitter account with other twitter users
+ * - handle url minification
+ * - can it be pure irc ?
+ *   - would be nice... likely long term
+ *
+ * - only one twitter irc bridge per channel...  or risk of infinite loop
+ * - do the register_channel/confirm channel
+ *   - from the cmdline user of node-oauth
+*/
+
+/**
+ * Minimal twitter client
+ * - oauth compliant
+ * - switch to twitter-node when possible
+*/
 var twitter_client_t	= function(){
 	var consumer_key	= "8ho0SXoPa10N193ytZGcg";
 	var consumer_secret	= "xEGPFDZuGcCUPZf6tT98Q0ZQPwW7LXn1JEnh3RF7Q";
@@ -71,7 +106,7 @@ irc_client.addListener('message'+irc_channel, function(irc_nick, irc_mesg) {
 		}
 	}
 	
-	// add the suitable 'via @nickname' in twi_mesg	
+	// append the suitable 'via @nickname' in twi_mesg	
 	if( twi_nick )	twi_mesg	+= " (via @"+twi_nick+")";
 	else		twi_mesg	+= " (via "+irc_nick+")";
 
@@ -117,6 +152,11 @@ irc_client.addListener('pm', function(irc_nick, irc_mesg) {
 			}else{
 				irc_client.say(irc_nick, "Cant find your registration message. try 'register' command");
 			}
+			/**
+			 * store this result in a db file
+			 * - nstore ?
+			 * - streamieorg 
+			*/
 		})
 	}else if( command == "help" ){
 		var help_lines	= [
